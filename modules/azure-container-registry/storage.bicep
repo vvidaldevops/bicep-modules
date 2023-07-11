@@ -18,3 +18,4 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
 output storageAccountId string = storageAccount.id
 output storageAccountName string = storageAccount.name
 // output storageAccountConnectionString string = listKeys(resourceId(resourceGroupName, 'Microsoft.Storage/storageAccounts/blobServices', storageAccountName), '2021-06-01').keys[0].value
+//
