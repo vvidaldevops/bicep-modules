@@ -3,7 +3,7 @@ param location string
 param accountTier string
 
 module storageAccountModule 'br:vidalabacr.azurecr.io/bicep/components/storage-account:v1' = {
-  //name: 'storageAccountModule'
+  name: 'storageAccountModule'
   params: {
     storageAccountName: storageAccountName
     location: location
