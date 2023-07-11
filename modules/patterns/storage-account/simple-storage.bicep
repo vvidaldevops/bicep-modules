@@ -2,8 +2,8 @@ param storageAccountName string
 param location string
 param accountTier string
 
-module storageAccountModule 'br:vidalabacr.azurecr.io/bicep/components/storage-account:v1' = {
-  name: 'storageAccountModule'
+module storageAccountModule2 'br:vidalabacr.azurecr.io/bicep/components/storage-account:v1' = {
+  name: 'storageAccountModule2'
   params: {
     storageAccountName: storageAccountName
     location: location
@@ -11,6 +11,5 @@ module storageAccountModule 'br:vidalabacr.azurecr.io/bicep/components/storage-a
   }
 }
 
-output storageAccountId string = storageAccountModule.outputs.storageAccountId
+// output storageAccountId string = storageAccountModule2.outputs.storageAccountId
 //output storageAccountConnectionString string = storageAccountModule.outputs.storageAccountConnectionString
-//
