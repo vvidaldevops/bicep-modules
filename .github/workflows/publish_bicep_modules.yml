@@ -5,7 +5,7 @@ on: [push]
 #  push:
 #    branches: [ "main" ]
 
-workflow_dispatch:
+  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -33,7 +33,7 @@ jobs:
 
       # Publish Bicep Modules
     - name: Publish Bicep modules to Azure Container Registry
-    - run: |
+      run: |
         # loop through each directory and publish
         for d in */
         do
