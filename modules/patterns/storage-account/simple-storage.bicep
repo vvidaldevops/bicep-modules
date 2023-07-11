@@ -1,12 +1,13 @@
-param storagename string = 'stgaccountvidal'
-param location string = 'eastus'
+param storageAccountName string
+param location string
+param accountTier string
 
 module storageAccountModule 'br:vidalabacr.azurecr.io/bicep/components/storage-account:v1' = {
-  name: 'storageAccountModule'
+  //name: 'storageAccountModule'
   params: {
-    storageAccountName: storagename
+    storageAccountName: storageAccountName
     location: location
-    //resourceGroupName: 'RG-BICEP-ACR'
+    accountTier: accountTier
   }
 }
 
