@@ -45,7 +45,7 @@ jobs:
               echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
               # Publish Bicep Module to ACR
               echo "Publishing Bicep Module to the ACR"
-              az bicep publish --file main.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
+              az bicep publish --file storage.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
             else 
               echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version as it already exists";
             fi
