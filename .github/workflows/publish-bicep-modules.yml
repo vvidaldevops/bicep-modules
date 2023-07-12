@@ -81,7 +81,7 @@ jobs:
           az bicep publish --file storage-account/storage.bicep --target "br:vidalabacr.azurecr.io/bicep/components/storage-account:v1" --force
           az bicep publish --file appserviceplan/appserviceplan.bicep --target "br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1" --force
           az bicep publish --file appservice/appservice.bicep --target "br:vidalabacr.azurecr.io/bicep/components/appservice:v1" --force
-        working-directory: modules/components
+        working-directory: modules/components/
 
       # Publish Bicep Modules
       - name: Publish Bicep Patterns to ACR
@@ -90,7 +90,7 @@ jobs:
           az bicep publish --file appservice/simple-appservice.bicep --target "br:vidalabacr.azurecr.io/bicep/components/appservice:v1" --force
           #az bicep publish --file appserviceplan/simple-appserviceplan.bicep --target "br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1" --force
 
-        working-directory: modules/patterns
+        working-directory: modules/patterns/
 
       ## Publish Bicep Modules (Checking the version)
       #- name: Publish Bicep modules to ACR
