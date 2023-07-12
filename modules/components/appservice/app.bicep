@@ -4,25 +4,13 @@ param location string
 @description('The name of the App Service app.')
 param appServiceAppName string
 
-@description('The name of the App Service plan.')
-param appServicePlanName string
-
-@description('The name of the App Service plan SKU.')
-param appServicePlanSkuName string
-
-resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
-  name: appServicePlanName
-  location: location
-  sku: {
-    name: appServicePlanSkuName
-  }
-}
+param AppServicePlanID string
 
 resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
   name: appServiceAppName
   location: location
   properties: {
-    serverFarmId: appServicePlan.id
+    serverFarmId: AppServicePlanID
     httpsOnly: true
   }
 }

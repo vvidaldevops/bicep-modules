@@ -1,0 +1,15 @@
+// For using alias inside de modules
+
+//Here, We’ve aliased my ACR login server URL as ACR-LAB, so we can reference the module 
+// using this format: br/<module-alias>:<module-name-or-path>:<tag>.
+
+{
+  "moduleAliases": {
+    "ts": {},
+    "br": {
+      "ACR-LAB": {
+        "registry": "vidalabacr.azurecr.io"
+      }
+    }
+  }
+}
