@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 jobs:
-  publish-bicep:
+  Publish-Bicep-Modules-to-ACR:
     runs-on: ubuntu-latest
     
     steps:
@@ -32,6 +32,7 @@ jobs:
       #    az version
       #    az bicep install
 
+      ### Comparing the versions
       #- name: Semantic 
       #  id: semantic
       #  uses: paulhatch/semantic-version@v5.0.2
@@ -86,7 +87,7 @@ jobs:
           az bicep publish --file simple-storage.bicep --target "br:vidalabacr.azurecr.io/bicep/patterns/simple-storage:v1" --force
         working-directory: modules/patterns/storage-account
 
-      ## Publish Bicep Modules
+      ## Publish Bicep Modules (Checking the version)
       #- name: Publish Bicep modules to ACR
       #  run: |
       #    # loop through each directory and publish
