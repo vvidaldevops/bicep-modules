@@ -29,9 +29,9 @@ resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-previe
   scope: storageAccount
   properties: {
     workspaceId: workspaceId
-    logs: [
+    metrics: [
       {
-        category: 'StorageRead'
+        category: 'Transaction'
         enabled: true
         retentionPolicy: {
           days: 30
