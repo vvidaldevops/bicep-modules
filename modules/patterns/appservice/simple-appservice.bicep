@@ -10,9 +10,11 @@ param appServicePlanName string
 param appServiceAppName string
 param AppServicePlanID string
 
+param workspaceId string
+
 // Storage Account
 //param storageAccountName string
-//param workspaceId string
+
 
 // App Service Plan
 module appServicePlan 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1' = {
