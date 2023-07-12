@@ -11,7 +11,8 @@ param appServiceAppName string
 param AppServicePlanID string
 
 // Storage Account
-param storageAccountName string
+//param storageAccountName string
+//param workspaceId string
 
 // App Service Plan
 module appServicePlan 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1' = {
@@ -20,19 +21,22 @@ module appServicePlan 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:
     appServicePlanName: appServicePlanName
     //resourceGroupName: resourceGroupName
     location: location
+    workspaceId: workspaceId
   }
 }
 
 // App Service
-module appServiceApp 'br:vidalabacr.azurecr.io/bicep/components/appservice:v1' = {
+module appServiceApp 'br/ACR-LAB:bicep/components/appservice:v1' = {
   name: 'appServiceApp'
   location: location
   params: {
     appServiceAppName: appServiceAppName
     AppServicePlanID: AppServicePlanID
+    workspaceId: workspaceId
   }
 }
 
+/*
 // Storage Account
 module storageAccount 'br/ACR-LAB:bicep/components/storage:v1' = {
   name: 'storageAccount'
@@ -42,5 +46,5 @@ module storageAccount 'br/ACR-LAB:bicep/components/storage:v1' = {
     location: location
   }
 }
-
+*/
 

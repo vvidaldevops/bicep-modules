@@ -5,6 +5,7 @@ param location string
 param appServiceAppName string
 
 param AppServicePlanID string
+param workspaceId string
 
 resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
   name: appServiceAppName
@@ -22,10 +23,26 @@ output appServiceAppHostName string = appServiceApp.properties.defaultHostName
 // output booleanOutput bool = contains(deployment().name, 'demo')
 // output arrayOutput array = environment().authentication.audiences
 // output objectOutput object = subscription()
-
-
 // var user = {
 //   'user-name': 'Test Person'
 // }
-
 // output stringOutput string = user['user-name']
+
+// Diagnostic Settings
+resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'diagset-appsvc'
+  scope: appServiceApp
+  properties: {
+    workspaceId: workspaceId
+    logs: [
+      {
+        category: 'AppServiceHTTPLogs'
+        enabled: true
+        retentionPolicy: {
+          days: 30
+          enabled: true 
+        }
+      }
+    ]
+  }
+}

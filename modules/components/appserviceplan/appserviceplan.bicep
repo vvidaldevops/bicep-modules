@@ -7,6 +7,8 @@ param appServicePlanName string
 //@description('The name of the App Service plan SKU.')
 //param appServicePlanSkuName string
 
+param workspaceId string
+
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: appServicePlanName
   location: location
@@ -28,3 +30,22 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
 // }
 
 // output stringOutput string = user['user-name']
+
+// Diagnostic Settings
+resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'diagset-appsvcplan'
+  scope: appServicePlan
+  properties: {
+    workspaceId: workspaceId
+    logs: [
+      {
+        category: 'AppServiceEnvironmentPlatformLogs'
+        enabled: true
+        retentionPolicy: {
+          days: 30
+          enabled: true 
+        }
+      }
+    ]
+  }
+}
