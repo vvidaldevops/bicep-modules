@@ -31,7 +31,7 @@ resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-previe
     workspaceId: workspaceId
     logs: [
       {
-        category: 'AllMetrics'
+        category: 'StorageRead'
         enabled: true
         retentionPolicy: {
           days: 30
