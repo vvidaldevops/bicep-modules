@@ -21,7 +21,6 @@ module appServicePlan 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:
   name: 'appServicePlan'
   params: {
     appServicePlanName: appServicePlanName
-    //resourceGroupName: resourceGroupName
     location: location
     workspaceId: workspaceId
   }
@@ -30,9 +29,9 @@ module appServicePlan 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:
 // App Service
 module appServiceApp 'br/ACR-LAB:bicep/components/appservice:v1' = {
   name: 'appServiceApp'
-  location: location
   params: {
     appServiceAppName: appServiceAppName
+    location: location
     AppServicePlanID: AppServicePlanID
     workspaceId: workspaceId
   }
