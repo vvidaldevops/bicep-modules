@@ -32,38 +32,47 @@ jobs:
       #    az version
       #    az bicep install
 
-      # Publish Bicep Components Modules
+      # Publish Bicep Components (Checking the version)
       - name: Publish Bicep Components to ACR
         run: |
-          az bicep publish --file storage-account/storage.bicep --target "br:vidalabacr.azurecr.io/bicep/components/storage-account:v1";
-          az bicep publish --file appserviceplan/appserviceplan.bicep --target "br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1";
-          az bicep publish --file appservice/appservice.bicep --target "br:vidalabacr.azurecr.io/bicep/components/appservice:v1"
-        working-directory: modules/components/
+          # loop through each directory and publish
+          for d in */
+          do
+            cd $d
+            version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor')"
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/modules/${d::-1}:$version 2>/dev/null)" ]; 
+            then 
+              echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
+              # Publish Bicep Components to ACR
+              echo "Publishing Bicep Module to the ACR"
+              az bicep publish --file storage-account/storage.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
+              az bicep publish --file appserviceplan/appserviceplan.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
+              az bicep publish --file appservice/appservice.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
+            else 
+              echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version as it already exists";
+            fi
+            cd - > /dev/null
+          done          
+        working-directory: modules/components
 
-      # Publish Bicep Patterns Modules
+      # Publish Bicep Modules (Checking the version)
       - name: Publish Bicep Patterns to ACR
         run: |
-          az bicep publish --file storage-account/simple-storage.bicep --target "br:vidalabacr.azurecr.io/bicep/patterns/simple-storage:v1";
-          az bicep publish --file appservice/simple-appservice.bicep --target "br:vidalabacr.azurecr.io/bicep/patterns/appservice:v1";
-        working-directory: modules/patterns/
-
-      ## Publish Bicep Modules (Checking the version)
-      #- name: Publish Bicep modules to ACR
-      #  run: |
-      #    # loop through each directory and publish
-      #    for d in */
-      #    do
-      #      cd $d
-      #      version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor')"
-      #      if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/modules/${d::-1}:$version 2>/dev/null)" ]; 
-      #      then 
-      #        echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
-      #        # Publish Bicep Module to ACR
-      #        echo "Publishing Bicep Module to the ACR"
-      #        az bicep publish --file storage.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
-      #      else 
-      #        echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version as it already exists";
-      #      fi
-      #      cd - > /dev/null
-      #    done          
-      #  working-directory: modules/components
+          # loop through each directory and publish
+          for d in */
+          do
+            cd $d
+            version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor')"
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/modules/${d::-1}:$version 2>/dev/null)" ]; 
+            then 
+              echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
+              # Publish Bicep Module to ACR
+              echo "Publishing Bicep Patterns to the ACR"
+              az bicep publish --file storage/simple-storage.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
+              az bicep publish --file appservice/simple-appservice.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
+            else 
+              echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version as it already exists";
+            fi
+            cd - > /dev/null
+          done          
+        working-directory: modules/patterns

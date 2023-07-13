@@ -2,7 +2,7 @@
 param storageAccountName string
 param location string
 param accountTier string
-// param workspaceId string
+param workspaceId string
 
 //-----------------------------------------------------------------------------------------------
 
@@ -24,10 +24,9 @@ output storageAccountName string = storageAccount.name
 
 //-----------------------------------------------------------------------------------------------
 
-/*
 // Diagnostic Settings
 resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'diagset-lab'
+  name: 'diagset-stg'
   scope: storageAccount
   properties: {
     workspaceId: workspaceId

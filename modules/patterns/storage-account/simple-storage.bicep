@@ -14,6 +14,6 @@ module storageAccountModule2 'br:vidalabacr.azurecr.io/bicep/components/storage-
     storageAccountName: storageAccountName
     location: location
     accountTier: accountTier
-    //workspaceId: workspaceId
+    workspaceId: workspaceId
   }
 }
