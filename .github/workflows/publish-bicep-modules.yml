@@ -45,7 +45,6 @@ jobs:
         run: |
           az bicep publish --file storage-account/simple-storage.bicep --target "br:vidalabacr.azurecr.io/bicep/patterns/simple-storage:v1";
           az bicep publish --file appservice/simple-appservice.bicep --target "br:vidalabacr.azurecr.io/bicep/patterns/appservice:v1";
-          az bicep publish --file appserviceplan/simple-appserviceplan.bicep --target "br:vidalabacr.azurecr.io/bicep/patterns/appserviceplan:v1"
         working-directory: modules/patterns/
 
       ## Publish Bicep Modules (Checking the version)
