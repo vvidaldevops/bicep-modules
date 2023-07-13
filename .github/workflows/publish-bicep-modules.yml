@@ -40,14 +40,16 @@ jobs:
           do
             cd $d
             version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor')"
-            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/modules/${d::-1}:$version 2>/dev/null)" ]; 
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/storage-account${d::-1}:$version 2>/dev/null)" ]; 
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/appserviceplan${d::-1}:$version 2>/dev/null)" ];
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/appservice${d::-1}:$version 2>/dev/null)" ];
             then 
-              echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
+              echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version";
               # Publish Bicep Components to ACR
               echo "Publishing Bicep Module to the ACR"
-              az bicep publish --file storage-account/storage.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
-              az bicep publish --file appserviceplan/appserviceplan.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
-              az bicep publish --file appservice/appservice.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
+              az bicep publish --file storage-account/storage.bicep --target "br:${{ secrets.ACR_SERVER }}bicep/components/storage-account/${d::-1}:$version";
+              az bicep publish --file appserviceplan/appserviceplan.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/appserviceplan/${d::-1}:$version";
+              az bicep publish --file appservice/appservice.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/appservice/${d::-1}:$version";
             else 
               echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version as it already exists";
             fi
@@ -63,13 +65,14 @@ jobs:
           do
             cd $d
             version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor')"
-            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/modules/${d::-1}:$version 2>/dev/null)" ]; 
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/patterns/simple-storage/${d::-1}:$version 2>/dev/null)" ]; 
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/patterns/simple-appservice/${d::-1}:$version 2>/dev/null)" ];
             then 
               echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
               # Publish Bicep Module to ACR
               echo "Publishing Bicep Patterns to the ACR"
-              az bicep publish --file storage/simple-storage.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
-              az bicep publish --file appservice/simple-appservice.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version";
+              az bicep publish --file storage/simple-storage.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/patterns/storage${d::-1}:$version";
+              az bicep publish --file appservice/simple-appservice.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/patterns/appservice/${d::-1}:$version";
             else 
               echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/modules/${d::-1}:$version as it already exists";
             fi
