@@ -7,16 +7,18 @@ param appServicePlanName string
 //@description('The name of the App Service plan SKU.')
 //param appServicePlanSkuName string
 
-param workspaceId string
+//param workspaceId string
 
-resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
+resource appServicePlan 'Microsoft.Web/serverfarms@2021-03-01' = {
   name: appServicePlanName
   location: location
   sku: {
-    name: 'Basic'
+    name: 'B1'
   }
 }
-output appServicePlanId string = appServicePlan.id
+
+@description('Output the farm id')
+output farmId string = appServicePlan.id
 
 // output appServiceAppHostName string = appServiceApp.properties.defaultHostName
 
@@ -33,6 +35,7 @@ output appServicePlanId string = appServicePlan.id
 
 // output stringOutput string = user['user-name']
 
+/*
 // Diagnostic Settings
 resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: 'diagset-appsvcplan'
@@ -51,3 +54,4 @@ resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-previe
     ]
   }
 }
+*/
