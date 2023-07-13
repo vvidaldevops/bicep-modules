@@ -2,7 +2,7 @@
 param storageAccountName string
 param location string
 param accountTier string
-param workspaceId string
+// param workspaceId string
 
 //-----------------------------------------------------------------------------------------------
 
