@@ -53,7 +53,7 @@ jobs:
             fi
             cd - > /dev/null
           done          
-        working-directory: modules/components
+        working-directory: modules/components/
 
       # Publish Bicep Modules (Checking the version)
       - name: Publish Bicep Patterns to ACR
@@ -75,4 +75,4 @@ jobs:
             fi
             cd - > /dev/null
           done          
-        working-directory: modules/patterns
+        working-directory: modules/patterns/
