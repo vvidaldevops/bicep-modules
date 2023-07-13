@@ -35,5 +35,6 @@ module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v2' = {
     appServiceAppName: appServiceAppName
     location: location
     farmId: appServicePlanModule.outputs.farmId
+    workspaceId: workspaceId
   }
 }
