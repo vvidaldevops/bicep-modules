@@ -9,7 +9,7 @@ param appServicePlanName string
 param appServiceAppName string
 // param appServicePlanId string
 
-param workspaceId string
+// param workspaceId string
 
 
 // Storage Account
@@ -22,7 +22,7 @@ module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appservic
   params: {
     appServicePlanName: appServicePlanName
     location: location
-    workspaceId: workspaceId
+    // workspaceId: workspaceId
   }
 }
 //output teste string = appServicePlanModule.outputs.appServicePlanId
@@ -38,7 +38,7 @@ module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1' = {
     location: location
     farmId: appServicePlanModule.outputs.farmId
     //AppServicePlanID: appServicePlanId
-    workspaceId: workspaceId
+    // workspaceId: workspaceId
   }
 }
 

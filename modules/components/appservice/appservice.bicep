@@ -5,7 +5,7 @@ param location string
 param appServiceAppName string
 
 param farmId string
-param workspaceId string
+// param workspaceId string
 
 resource appServiceApp 'Microsoft.Web/sites@2021-03-01' = {
   name: appServiceAppName
@@ -28,6 +28,7 @@ output appServiceAppHostName string = appServiceApp.properties.defaultHostName
 // }
 // output stringOutput string = user['user-name']
 
+/*
 // Diagnostic Settings
 resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: 'diagset-appsvc'
@@ -46,3 +47,4 @@ resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-previe
     ]
   }
 }
+*/
