@@ -4,7 +4,7 @@ param location string
 param accountTier string
 
 //@description('The ID of Log Analytics Workspace.')
-//param workspaceId string
+param workspaceId string
 
 //-----------------------------------------------------------------------------------------------
 
