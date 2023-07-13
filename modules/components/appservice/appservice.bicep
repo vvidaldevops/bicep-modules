@@ -4,14 +4,14 @@ param location string
 @description('The name of the App Service app.')
 param appServiceAppName string
 
-param AppServicePlanID string
+param farmId string
 param workspaceId string
 
-resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
+resource appServiceApp 'Microsoft.Web/sites@2021-03-01' = {
   name: appServiceAppName
   location: location
   properties: {
-    serverFarmId: AppServicePlanID
+    serverFarmId: farmId
     httpsOnly: true
   }
 }
