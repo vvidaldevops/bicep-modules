@@ -11,7 +11,7 @@ param farmId string
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 
-//-----------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------
 
 // App Service
 resource appServiceApp 'Microsoft.Web/sites@2021-03-01' = {
