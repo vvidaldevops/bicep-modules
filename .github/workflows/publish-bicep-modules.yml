@@ -56,7 +56,7 @@ jobs:
         run: |
           az bicep publish --file storage-account/storage.bicep --target "br:vidalabacr.azurecr.io/bicep/components/storage-account:v1" --force;
           az bicep publish --file appserviceplan/appserviceplan.bicep --target "br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1" --force;
-          az bicep publish --file appservice/appservice.bicep --target "br:vidalabacr.azurecr.io/bicep/components/appservice:v1 --force"
+          az bicep publish --file appservice/appservice.bicep --target "br:vidalabacr.azurecr.io/bicep/components/appservice:v1" --force;
         working-directory: modules/components/
       
       # Publish Bicep Patterns Modules
