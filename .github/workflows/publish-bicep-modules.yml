@@ -63,5 +63,5 @@ jobs:
       - name: Publish Bicep Patterns to ACR
         run: |
           az bicep publish --file storage-account/simple-storage.bicep --target "br:vidalabacr.azurecr.io/bicep/patterns/simple-storage:v1";
-          az bicep publish --file appservice/simple-appservice.bicep --target "br:vidalabacr.azurecr.io/bicep/patterns/appservice:v1";
+          az bicep publish --file appservice/simple-appservice.bicep --target "br:vidalabacr.azurecr.io/bicep/patterns/simple-appservice:v1";
         working-directory: modules/patterns/
