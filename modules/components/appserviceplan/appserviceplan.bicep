@@ -20,7 +20,6 @@ output appServicePlanId string = appServicePlan.id
 
 // output appServiceAppHostName string = appServiceApp.properties.defaultHostName
 
-
 // output stringOutput string = deployment().name
 // output integerOutput int = length(environment().authentication.audiences)
 // output booleanOutput bool = contains(deployment().name, 'demo')

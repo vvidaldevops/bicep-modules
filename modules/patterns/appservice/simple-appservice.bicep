@@ -1,4 +1,3 @@
-// To be TESTED !!!
 // Commom Variables
 param location string
 
@@ -8,7 +7,7 @@ param appServicePlanName string
 
 // App Service parameters
 param appServiceAppName string
-//param AppServicePlanID string
+param AppServicePlanID string
 
 param workspaceId string
 
@@ -25,8 +24,6 @@ module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appservic
     workspaceId: workspaceId
   }
 }
-output appServicePlanId string = appServicePlanModule.appServicePlan.id
-
 
 // App Service
 module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1' = {
@@ -34,8 +31,7 @@ module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1' = {
   params: {
     appServiceAppName: appServiceAppName
     location: location
-    //AppServicePlanID: appServicePlanModule.outputs.appServicePlanId
-    //AppServicePlanID: AppServicePlanID
+    AppServicePlanID: AppServicePlanID
     workspaceId: workspaceId
   }
 }
