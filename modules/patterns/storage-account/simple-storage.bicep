@@ -8,7 +8,7 @@ param accountTier string
 
 //-----------------------------------------------------------------------------------------------
 
-module storageAccountModule2 'br:vidalabacr.azurecr.io/bicep/components/storage-account:v2' = {
+module storageAccountModule2 'br:vidalabacr.azurecr.io/bicep/components/storage-account:v1' = {
   name: 'storageAccountModule2'
   params: {
     storageAccountName: storageAccountName

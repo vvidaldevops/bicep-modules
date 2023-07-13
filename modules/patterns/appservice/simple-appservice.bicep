@@ -15,7 +15,7 @@ param workspaceId string
 //-----------------------------------------------------------------------------------------------
 
 // App Service Plan
-module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v2' = {
+module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1' = {
 //  module appServicePlanModule '../../components/appserviceplan/appserviceplan.bicep' = {
   name: 'appServicePlanModule'
   params: {
@@ -28,7 +28,7 @@ module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appservic
 //-----------------------------------------------------------------------------------------------
 
 // App Service
-module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v3' = {
+module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1' = {
 //  module appServiceModule '../../components/appservice/appservice.bicep' = {
   name: 'appServiceModule'
   params: {
