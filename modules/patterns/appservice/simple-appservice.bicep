@@ -7,9 +7,10 @@ param appServicePlanName string
 
 // App Service parameters
 param appServiceAppName string
-param AppServicePlanID string
+param AppServicePlanId string
 
 param workspaceId string
+
 
 // Storage Account
 //param storageAccountName string
@@ -24,6 +25,7 @@ module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appservic
     workspaceId: workspaceId
   }
 }
+output AppServicePlanIdB string = AppServicePlanId
 
 // App Service
 module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1' = {
@@ -31,7 +33,7 @@ module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1' = {
   params: {
     appServiceAppName: appServiceAppName
     location: location
-    AppServicePlanID: AppServicePlanID
+    AppServicePlanID: AppServicePlanId
     workspaceId: workspaceId
   }
 }
