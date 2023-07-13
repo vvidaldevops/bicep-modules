@@ -25,7 +25,7 @@ module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appservic
     workspaceId: workspaceId
   }
 }
-//output appServicePlanId string = appServicePlanId
+output appServicePlanId string = appServicePlanModule.id
 
 // App Service
 module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1' = {
