@@ -35,17 +35,17 @@ jobs:
       # Publish Bicep Components Modules
       - name: Publish Bicep Components to ACR
         run: |
-          az bicep publish --file storage-account/storage.bicep --target "br:vidalabacr.azurecr.io/bicep/components/storage-account:v2" --force
-          az bicep publish --file appserviceplan/appserviceplan.bicep --target "br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v2" --force
-          az bicep publish --file appservice/appservice.bicep --target "br:vidalabacr.azurecr.io/bicep/components/appservice:v2" --force
+          # az bicep publish --file storage-account/storage.bicep --target "br:vidalabacr.azurecr.io/bicep/components/storage-account:v2" --force
+          # az bicep publish --file appserviceplan/appserviceplan.bicep --target "br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v2" --force
+          az bicep publish --file appservice/appservice.bicep --target "br:vidalabacr.azurecr.io/bicep/components/appservice:v3" --force
         working-directory: modules/components/
 
       # Publish Bicep Patterns Modules
       - name: Publish Bicep Patterns to ACR
         run: |
-          az bicep publish --file storage-account/simple-storage.bicep --target "br:vidalabacr.azurecr.io/bicep/patterns/simple-storage:v2" --force;
-          az bicep publish --file appservice/simple-appservice.bicep --target "br:vidalabacr.azurecr.io/bicep/patterns/appservice:v2" --force;
-          #az bicep publish --file appserviceplan/simple-appserviceplan.bicep --target "br:vidalabacr.azurecr.io/bicep/patterns/appserviceplan:v2" --force
+          # az bicep publish --file storage-account/simple-storage.bicep --target "br:vidalabacr.azurecr.io/bicep/patterns/simple-storage:v2" --force;
+          # az bicep publish --file appservice/simple-appservice.bicep --target "br:vidalabacr.azurecr.io/bicep/patterns/appservice:v2" --force;
+          # az bicep publish --file appserviceplan/simple-appserviceplan.bicep --target "br:vidalabacr.azurecr.io/bicep/patterns/appserviceplan:v2" --force
         working-directory: modules/patterns/
 
       ## Publish Bicep Modules (Checking the version)
