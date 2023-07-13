@@ -1,20 +1,18 @@
-// Commom Variables
+// Parameters
+@description('The Azure region into which the resources should be deployed.')
 param location string
 
-// App Service Plan Parameters
+@description('The name of the App Service plan.')
 param appServicePlanName string
-//param resourceGroupName string
 
-// App Service parameters
+@description('The name of the App Service.')
 param appServiceAppName string
-// param appServicePlanId string
 
-// param workspaceId string
+@description('The ID of Log Analytics Workspace.')
+param workspaceId string
 
 
-// Storage Account
-//param storageAccountName string
-
+//-----------------------------------------------------------------------------------------------
 
 // App Service Plan
 module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1' = {
@@ -23,33 +21,19 @@ module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appservic
   params: {
     appServicePlanName: appServicePlanName
     location: location
-    // workspaceId: workspaceId
+    workspaceId: workspaceId
   }
 }
-//output teste string = appServicePlanModule.outputs.appServicePlanId
+
+//-----------------------------------------------------------------------------------------------
 
 // App Service
-// module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1' = {
-  module appServiceModule '../../components/appservice/appservice.bicep' = {
+module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1' = {
+//  module appServiceModule '../../components/appservice/appservice.bicep' = {
   name: 'appServiceModule'
   params: {
     appServiceAppName: appServiceAppName
     location: location
     farmId: appServicePlanModule.outputs.farmId
-    // AppServicePlanID: appServicePlanId
-    // workspaceId: workspaceId
   }
 }
-
-/*
-// Storage Account
-module storageAccount 'br/ACR-LAB:bicep/components/storage:v1' = {
-  name: 'storageAccount'
-  //path: storageAccountModulePath
-  params: {
-    storageAccountName: storageAccountName
-    location: location
-  }
-}
-*/
-
