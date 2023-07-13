@@ -17,8 +17,8 @@ param appServiceAppName string
 
 
 // App Service Plan
-// module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1' = {
-  module appServicePlanModule '../../components/appserviceplan/appserviceplan.bicep' = {
+module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1' = {
+//  module appServicePlanModule '../../components/appserviceplan/appserviceplan.bicep' = {
   name: 'appServicePlanModule'
   params: {
     appServicePlanName: appServicePlanName
