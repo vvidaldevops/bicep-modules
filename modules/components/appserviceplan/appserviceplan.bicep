@@ -1,3 +1,4 @@
+// Parameters
 @description('The Azure region into which the resources should be deployed.')
 param location string
 
@@ -7,8 +8,12 @@ param appServicePlanName string
 //@description('The name of the App Service plan SKU.')
 //param appServicePlanSkuName string
 
-//param workspaceId string
+@description('The ID of Log Analytics Workspace.')
+param workspaceId string
 
+//-----------------------------------------------------------------------------------------------
+
+// App Service Plan
 resource appServicePlan 'Microsoft.Web/serverfarms@2021-03-01' = {
   name: appServicePlanName
   location: location
@@ -20,22 +25,8 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2021-03-01' = {
 @description('Output the farm id')
 output farmId string = appServicePlan.id
 
-// output appServiceAppHostName string = appServiceApp.properties.defaultHostName
+//-----------------------------------------------------------------------------------------------
 
-// output stringOutput string = deployment().name
-// output integerOutput int = length(environment().authentication.audiences)
-// output booleanOutput bool = contains(deployment().name, 'demo')
-// output arrayOutput array = environment().authentication.audiences
-// output objectOutput object = subscription()
-
-
-// var user = {
-//   'user-name': 'Test Person'
-// }
-
-// output stringOutput string = user['user-name']
-
-/*
 // Diagnostic Settings
 resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: 'diagset-appsvcplan'
@@ -44,7 +35,7 @@ resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-previe
     workspaceId: workspaceId
     logs: [
       {
-        category: 'AppServiceEnvironmentPlatformLogs'
+        category: 'All Metrics'
         enabled: true
         retentionPolicy: {
           days: 30
@@ -54,4 +45,3 @@ resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-previe
     ]
   }
 }
-*/
