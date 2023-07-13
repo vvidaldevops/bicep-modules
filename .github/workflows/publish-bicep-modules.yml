@@ -32,7 +32,7 @@ jobs:
       #    az version
       #    az bicep install
 
-      # Publish Bicep Components Modules
+      # Publish Bicep Components Modules #
       #- name: Publish Bicep modules to Azure Container Registry
       #  run: |
       #    # loop through each directory and publish
