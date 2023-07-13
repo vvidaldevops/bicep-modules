@@ -24,6 +24,7 @@ output storageAccountName string = storageAccount.name
 
 //-----------------------------------------------------------------------------------------------
 
+/*
 // Diagnostic Settings
 resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: 'diagset-lab'
@@ -42,3 +43,4 @@ resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-previe
     ]
   }
 }
+*/
