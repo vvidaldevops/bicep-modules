@@ -8,7 +8,7 @@ param appServicePlanName string
 
 // App Service parameters
 param appServiceAppName string
-param AppServicePlanID string
+//param AppServicePlanID string
 
 param workspaceId string
 
@@ -34,8 +34,8 @@ module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1' = {
   params: {
     appServiceAppName: appServiceAppName
     location: location
-    //AppServicePlanID: appServicePlanModule.outputs.appServicePlanId
-    AppServicePlanID: AppServicePlanID
+    AppServicePlanID: appServicePlanModule.outputs.appServicePlanId
+    //AppServicePlanID: AppServicePlanID
     workspaceId: workspaceId
   }
 }

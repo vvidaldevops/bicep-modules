@@ -16,8 +16,10 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
     name: 'Basic'
   }
 }
-// output appServiceAppHostName string = appServiceApp.properties.defaultHostName
 output appServicePlanId string = appServicePlan.id
+
+// output appServiceAppHostName string = appServiceApp.properties.defaultHostName
+
 
 // output stringOutput string = deployment().name
 // output integerOutput int = length(environment().authentication.audiences)
