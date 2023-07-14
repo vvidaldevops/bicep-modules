@@ -9,6 +9,9 @@ param location string
 @description('The Storage Account tier')
 param accountTier string
 
+@description('The Storage Account tier')
+param accessTier string
+
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 
@@ -19,12 +22,13 @@ param workspaceId string
 
 // Storage Account Module
 //*****************************************************************************************************
-module storageAccountModule 'br:vidalabacr.azurecr.io/bicep/components/storage-account:v1' = {
+module storageAccountModule 'br:vidalabacr.azurecr.io/bicep/components/storage-account:v1.1.0' = {
   name: 'storageAccountModule'
   params: {
     storageAccountName: storageAccountName
     location: location
     accountTier: accountTier
+    accessTier: accessTier
     workspaceId: workspaceId
     // tags: tags
   }

@@ -9,6 +9,9 @@ param location string
 @description('The Storage Account tier')
 param accountTier string
 
+@description('The Storage Account tier')
+param accessTier string
+
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 
@@ -19,7 +22,7 @@ param workspaceId string
 
 // Storage Account
 //*****************************************************************************************************
-resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
   name: storageAccountName
   location: location
   // tags: tags
@@ -29,11 +32,40 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
   }
   properties: {
     allowBlobPublicAccess: false
+    accessTier: accessTier
+    allowCrossTenantReplication: false
+    allowSharedKeyAccess: true
+    encryption: {
+      keySource: 'Microsoft.Storage'
+      requireInfrastructureEncryption: false
+      services: {
+        blob: {
+          enabled: true
+        }
+        file: {
+          enabled: true
+        }
+        queue: {
+          enabled: true
+          keyType: 'Service'
+        }
+        table: {
+          enabled: true
+          keyType: 'Service'
+        }
+      }
+    }    
+    minimumTlsVersion: 'TLS1_2'
+    networkAcls: {
+      bypass: 'AzureServices'
+      defaultAction: 'Deny'
+    }
+    supportsHttpsTrafficOnly: true 
   }
 }
-
 output storageAccountId string = storageAccount.id
 output storageAccountName string = storageAccount.name
+
 //*****************************************************************************************************
 
 
