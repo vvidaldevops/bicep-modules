@@ -54,7 +54,7 @@ jobs:
       # Publish Bicep Components Modules
       - name: Publish Bicep Components to ACR
         run: |
-          az bicep publish --file storage-account/storage.bicep --target "br:vidalabacr.azurecr.io/bicep/components/storage-account:v1.0.0" --force;
+          az bicep publish --file storage-account/storage.bicep --target "br:vidalabacr.azurecr.io/bicep/components/storage-account:v1.1.0" --force;
           # az bicep publish --file appserviceplan/appserviceplan.bicep --target "br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1.1.0" --force;
           # az bicep publish --file appservice/appservice.bicep --target "br:vidalabacr.azurecr.io/bicep/components/appservice:v1.1.0" --force;
         working-directory: modules/components/

@@ -45,14 +45,6 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
         file: {
           enabled: true
         }
-        queue: {
-          enabled: true
-          keyType: 'Service'
-        }
-        table: {
-          enabled: true
-          keyType: 'Service'
-        }
       }
     }    
     minimumTlsVersion: 'TLS1_2'
