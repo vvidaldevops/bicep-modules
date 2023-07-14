@@ -1,4 +1,5 @@
 // Parameters
+//*****************************************************************************************************
 @description('The Azure region into which the resources should be deployed.')
 param location string
 
@@ -11,10 +12,13 @@ param appServiceAppName string
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 
+// @description('Resource Tags')
+// param tags string
+//*****************************************************************************************************
 
-//-----------------------------------------------------------------------------------------------
 
 // App Service Plan
+//*****************************************************************************************************
 module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1' = {
 //  module appServicePlanModule '../../components/appserviceplan/appserviceplan.bicep' = {
   name: 'appServicePlanModule'
@@ -22,12 +26,14 @@ module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appservic
     appServicePlanName: appServicePlanName
     location: location
     workspaceId: workspaceId
+    // tags: tags
   }
 }
+//*****************************************************************************************************
 
-//-----------------------------------------------------------------------------------------------
 
 // App Service
+//*****************************************************************************************************
 module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1' = {
 //  module appServiceModule '../../components/appservice/appservice.bicep' = {
   name: 'appServiceModule'
@@ -36,5 +42,7 @@ module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1' = {
     location: location
     farmId: appServicePlanModule.outputs.farmId
     workspaceId: workspaceId
+    // tags: tags
   }
 }
+//*****************************************************************************************************
