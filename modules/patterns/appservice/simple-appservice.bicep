@@ -19,7 +19,7 @@ param workspaceId string
 
 // App Service Plan
 //*****************************************************************************************************
-module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1.1.0' = {
+module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1.0.0' = {
   name: 'appServicePlanModule'
   params: {
     appServicePlanName: appServicePlanName
