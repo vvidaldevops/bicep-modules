@@ -26,7 +26,7 @@ resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
     serverFarmId: farmId
     httpsOnly: true
   }
-  tags: TagPocEnvironment
+  // tags: TagPocEnvironment
 }
 
 output appServiceAppHostName string = appServiceApp.properties.defaultHostName
