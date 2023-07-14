@@ -9,7 +9,7 @@ param workspaceId string
 //-----------------------------------------------------------------------------------------------
 
 module storageAccountModule2 'br:vidalabacr.azurecr.io/bicep/components/storage-account:v1' = {
-  name: 'storageAccountModule2'
+  name: 'storageAccountModule'
   params: {
     storageAccountName: storageAccountName
     location: location
