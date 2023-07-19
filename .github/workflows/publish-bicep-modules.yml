@@ -38,7 +38,7 @@ jobs:
           # loop through each directory and publish
           for d in */
           do
-            cd $d
+            # cd $d
             version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor')"
             if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/storage-account/${d::-1}:$version 2>/dev/null)" ]; 
             then 
