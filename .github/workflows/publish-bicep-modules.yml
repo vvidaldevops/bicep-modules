@@ -37,7 +37,7 @@ jobs:
         run: |
           # loop through each directory and publish
           # for d in */
-          for d in "appservice/*"
+          for d in 'appservice/*'
           do
             cd $d
             version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor')"
@@ -49,7 +49,21 @@ jobs:
               echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version as it already exists";
             fi
             cd - > /dev/null
-          done          
+          done
+
+          # for d in "appserviceplan/*"
+          # do
+          #   cd $d
+          #   version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor')"
+          #   if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/${d::-1}:$version 2>/dev/null)" ]; 
+          #   then 
+          #     echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/components/appservice/${d::-1}:$version";
+          #     az bicep publish --file appservice.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version";
+          #   else 
+          #     echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version as it already exists";
+          #   fi
+          #   cd - > /dev/null
+          # done           
         working-directory: modules/components
 
 
