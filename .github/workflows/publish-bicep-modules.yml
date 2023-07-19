@@ -43,12 +43,12 @@ jobs:
           do
             cd $d
             version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor')"
-            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/${d::-1}:$version 2>/dev/null)" ]; 
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$:$version 2>/dev/null)" ]; 
             then 
               echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/components/$:$version";
-              az bicep publish --file appservice.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version";
+              az bicep publish --file appservice.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$:$version";
             else 
-              echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version as it already exists";
+              echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/$:$version as it already exists";
             fi
             cd - > /dev/null
           done
