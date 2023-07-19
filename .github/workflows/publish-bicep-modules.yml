@@ -45,7 +45,7 @@ jobs:
             version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor')"
             if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/${d::-1}:$version 2>/dev/null)" ]; 
             then 
-              echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version";
+              echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/components/$:$version";
               az bicep publish --file appservice.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version";
             else 
               echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version as it already exists";
@@ -53,35 +53,35 @@ jobs:
             cd - > /dev/null
           done
 
-          # Loop through App Service Plan directory
-          for d in appserviceplan
-          do
-            cd $d
-            version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor')"
-            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/${d::-1}:$version 2>/dev/null)" ]; 
-            then 
-              echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version";
-              az bicep publish --file appserviceplan.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version";
-            else 
-              echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version as it already exists";
-            fi
-            cd - > /dev/null
-          done
+          # # Loop through App Service Plan directory
+          # for d in appserviceplan
+          # do
+          #   cd $d
+          #   version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor')"
+          #   if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/${d::-1}:$version 2>/dev/null)" ]; 
+          #   then 
+          #     echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version";
+          #     az bicep publish --file appserviceplan.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version";
+          #   else 
+          #     echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version as it already exists";
+          #   fi
+          #   cd - > /dev/null
+          # done
 
-          # Loop through Storage Account directory
-          for d in storage-account
-          do
-            cd $d
-            version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor')"
-            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/${d::-1}:$version 2>/dev/null)" ]; 
-            then 
-              echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version";
-              az bicep publish --file storage.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version";
-            else 
-              echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version as it already exists";
-            fi
-            cd - > /dev/null
-          done           
+          # # Loop through Storage Account directory
+          # for d in storage-account
+          # do
+          #   cd $d
+          #   version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor')"
+          #   if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/${d::-1}:$version 2>/dev/null)" ]; 
+          #   then 
+          #     echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version";
+          #     az bicep publish --file storage.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version";
+          #   else 
+          #     echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/${d::-1}:$version as it already exists";
+          #   fi
+          #   cd - > /dev/null
+          # done           
         working-directory: modules/components
 
 
