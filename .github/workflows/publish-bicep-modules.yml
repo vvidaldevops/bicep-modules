@@ -53,7 +53,7 @@ jobs:
             cd - > /dev/null
           done
 
-          # # Loop through App Service Plan directory
+          ## # Loop through App Service Plan directory
           # for d in appserviceplan
           # do
           #   cd $d
