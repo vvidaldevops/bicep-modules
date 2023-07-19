@@ -37,7 +37,7 @@ jobs:
         run: |
           # loop through each directory and publish
           # for d in */
-          for d in 'appservice'
+          for d in "appservice/*"
           do
             cd $d
             version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor')"
