@@ -43,13 +43,13 @@ jobs:
             if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/storage-account/${d::-1}:$version 2>/dev/null)" ]; 
             then 
               echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/components/storage-account/${d::-1}:$version";
-              az bicep publish --file storage.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/storage-account/${d::-1}:$version";
+              az bicep publish --file storage-account/storage.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/storage-account/${d::-1}:$version";
             else 
               echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/storage-account/${d::-1}:$version as it already exists";
             fi
             cd - > /dev/null
           done          
-        working-directory: /modules/components/storage-account
+        working-directory: /modules/components
 
 
       ## Publish Bicep Components Modules
