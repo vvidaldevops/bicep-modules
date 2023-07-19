@@ -49,7 +49,7 @@ jobs:
             fi
             cd - > /dev/null
           done          
-        working-directory: modules/components/storage-account
+        working-directory: ../modules/components/storage-account
 
 
       ## Publish Bicep Components Modules
