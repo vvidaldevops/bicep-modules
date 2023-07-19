@@ -42,7 +42,7 @@ jobs:
           for d in appservice
           do
             cd $d
-            version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor')"
+            version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
             if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
             then 
               echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
