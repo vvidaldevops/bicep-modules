@@ -49,7 +49,7 @@ jobs:
             fi
             cd - > /dev/null
           done          
-        working-directory: modules/components/
+        working-directory: modules/components
 
 
       ## Publish Bicep Components Modules
