@@ -22,7 +22,7 @@ param useExistingAppServicePlan bool
 param appServicePlanId string
 
 @description('Indicates whether a Privante endpoint should be created.')
-param usePrivateEndpoint bool
+param useAppPrivateEndpoint bool
 
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
