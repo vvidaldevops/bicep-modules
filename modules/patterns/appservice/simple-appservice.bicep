@@ -36,6 +36,7 @@ module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appservic
   params: {
     appServicePlanName: appServicePlanName
     appServicePlanSkuName: appServicePlanSkuName
+    createNewAppServicePlan: createNewAppServicePlan
     location: location
     workspaceId: workspaceId
     // tags: tags
