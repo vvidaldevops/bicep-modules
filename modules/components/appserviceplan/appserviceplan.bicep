@@ -6,7 +6,7 @@ param location string
 @description('The name of the App Service plan.')
 param appServicePlanName string
 
-description('The name of the App Service plan SKU.')
+@description('The name of the App Service plan SKU.')
 param appServicePlanSkuName string
 
 @description('The ID of Log Analytics Workspace.')
