@@ -15,8 +15,8 @@ param appServiceAppName string
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 
-@description('Indicates whether an existing AppServicePlan should be used.')
-param useExistingAppServicePlan bool
+@description('Indicates whether AppServicePlan should be created or using an existing one.')
+param createNewAppServicePlan bool
 
 @description('If the above option is = true, the existing App Service Plan ID should be provided.')
 param appServicePlanId string
@@ -51,7 +51,7 @@ module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1.0.0' = {
   params: {
     appServiceAppName: appServiceAppName
     location: location
-    farmId: useExistingAppServicePlan ? appServicePlanId : appServicePlanModule.outputs.farmId
+    farmId: createNewAppServicePlan ? appServicePlanModule.outputs.farmId : appServicePlanId
     workspaceId: workspaceId
     pvtEndpointSubnetId: pvtEndpointSubnetId
     // tags: tags

@@ -12,6 +12,9 @@ param appServicePlanSkuName string
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 
+@description('Indicates whether AppServicePlan should be created or using an existing one.')
+param createNewAppServicePlan bool
+
 // @description('Resource Tags')
 // param tags string
 //*****************************************************************************************************
@@ -19,7 +22,7 @@ param workspaceId string
 
 // App Service Plan
 //*****************************************************************************************************
-resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
+resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = if (createNewAppServicePlan) {
   name: appServicePlanName
   location: location
   sku: {
