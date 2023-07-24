@@ -35,7 +35,7 @@ output farmId string = appServicePlan.id
 // Diagnostic Settings
 //*****************************************************************************************************
 resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'diagset-appsvcplan'
+  name: 'diagset-${appServicePlanName}'
   scope: appServicePlan
   properties: {
     workspaceId: workspaceId

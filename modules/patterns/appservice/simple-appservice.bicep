@@ -4,10 +4,10 @@
 param location string
 
 @description('The name of the App Service plan.')
-param appServicePlanName string
+param appServicePlanName string = ''
 
 @description('The name of the App Service plan SKU.')
-param appServicePlanSkuName string
+param appServicePlanSkuName string = ''
 
 @description('The name of the App Service.')
 param appServiceAppName string
