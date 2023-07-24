@@ -12,8 +12,8 @@ param farmId string
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 
-@description('Indicates whether a Privante endpoint should be created.')
-param useAppPrivateEndpoint bool
+// @description('Indicates whether a Privante endpoint should be created.')
+// param useAppPrivateEndpoint bool
 
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
@@ -41,7 +41,7 @@ output appServiceAppHostName string = appServiceApp.properties.defaultHostName
 
 // Private Endpoint
 //*****************************************************************************************************
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-02-01' = if (!useAppPrivateEndpoint) {
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-02-01' = if (!empty(pvtEndpointSubnetId)) {
   name: '${appServiceAppName}-PvtEndpoint'
   location: location
   properties: {
@@ -67,7 +67,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-02-01' = if (!
 // Diagnostic Settings
 //*****************************************************************************************************
 resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'diagset-appsvc'
+  name: 'diagset-${appServiceAppName}'
   scope: appServiceApp
   properties: {
     workspaceId: workspaceId
