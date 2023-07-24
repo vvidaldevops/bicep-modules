@@ -49,7 +49,7 @@ module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appservic
 
 // App Service
 //*****************************************************************************************************
-module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1.1.0' = {
+module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1.0.0' = {
   name: 'appServiceModule'
   params: {
     appServiceAppName: appServiceAppName
