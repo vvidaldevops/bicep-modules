@@ -12,6 +12,12 @@ param farmId string
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 
+@description('Indicates whether a Privante endpoint should be created.')
+param useAppPrivateEndpoint bool
+
+@description('The ID from Private Endpoint Subnet.')
+param pvtEndpointSubnetId string
+
 // @description('Resource Tags')
 // param tags string
 //*****************************************************************************************************
@@ -30,6 +36,31 @@ resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
 }
 
 output appServiceAppHostName string = appServiceApp.properties.defaultHostName
+//*****************************************************************************************************
+
+
+// Private Endpoint
+//*****************************************************************************************************
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-02-01' = if (!useAppPrivateEndpoint) {
+  name: '${appServiceAppName}-PvtEndpoint'
+  location: location
+  properties: {
+    subnet: {
+      id: pvtEndpointSubnetId
+    }
+    privateLinkServiceConnections: [
+      {
+        name: '${appServiceAppName}-PvtLink'
+        properties:{
+          privateLinkServiceId: appServiceApp.id
+          groupIds:[
+            'sites'
+          ]
+        }
+      }
+    ]
+  }
+}  
 //*****************************************************************************************************
 
 

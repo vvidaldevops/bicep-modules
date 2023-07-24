@@ -81,6 +81,8 @@ jobs:
               echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version as it already exists";
             fi
             cd - > /dev/null
+            # Waiting for components to be published 
+            sleep 20
           done           
         working-directory: modules/components
 
@@ -120,18 +122,6 @@ jobs:
             cd - > /dev/null
           done           
         working-directory: modules/patterns
-
-
-
-
-
-
-
-
-
-
-
-
 
       ## Publish Bicep Components Modules
       #- name: Publish Components to ACR
