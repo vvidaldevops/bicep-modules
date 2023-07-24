@@ -21,9 +21,6 @@ param useExistingAppServicePlan bool
 @description('If the above option is = true, the existing App Service Plan ID should be provided.')
 param appServicePlanId string
 
-// @description('Indicates whether a Privante endpoint should be created.')
-// param useAppPrivateEndpoint bool
-
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
 
@@ -56,8 +53,6 @@ module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1.0.0' = {
     location: location
     farmId: useExistingAppServicePlan ? appServicePlanId : appServicePlanModule.outputs.farmId
     workspaceId: workspaceId
-    // useAppPrivateEndpoint: useAppPrivateEndpoint ? pvtEndpointSubnetId : ''
-    // useAppPrivateEndpoint: useAppPrivateEndpoint
     pvtEndpointSubnetId: pvtEndpointSubnetId
     // tags: tags
   }
