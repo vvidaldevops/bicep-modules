@@ -1,8 +1,7 @@
-/*
 // Parameters
 //*****************************************************************************************************
 @description('The name of the function app that you wish to create.')
-param appName string = 'fnapp${uniqueString(resourceGroup().id)}'
+param functionAppName string
 
 @description('Location for all resources.')
 param location string = resourceGroup().location
@@ -13,14 +12,19 @@ param location string = resourceGroup().location
   'dotnet'
   'java'
 ])
-param runtime string = 'node'
+param farmId string
 
-var functionAppName = appName
-var hostingPlanName = appName
-var functionWorkerRuntime = runtime
+// var functionAppName = appName
+// var functionWorkerRuntime = runtime
+
+param storageAccountName string
+param storageAccount object
+param workspaceId string
+var functionWorkerRuntime = '.NET'
 //*****************************************************************************************************
 
-Function App
+
+// Function App
 //*****************************************************************************************************
 resource FunctionApp 'Microsoft.Web/sites@2022-03-01' = {
   name: functionAppName
@@ -30,7 +34,7 @@ resource FunctionApp 'Microsoft.Web/sites@2022-03-01' = {
     type: 'SystemAssigned'
   }
   properties: {
-    serverFarmId: hostingPlan.id
+    serverFarmId: farmId
     siteConfig: {
       appSettings: [
         {
@@ -69,4 +73,39 @@ resource FunctionApp 'Microsoft.Web/sites@2022-03-01' = {
   }
 }
 //*****************************************************************************************************
-*/
+
+
+// Diagnostic Settings
+//*****************************************************************************************************
+resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'diag-${functionAppName}'
+  // scope: storageAccount ##CHECK
+  properties: {
+    workspaceId: workspaceId
+    metrics: [
+      {
+        category: 'Transaction'
+        enabled: true
+        retentionPolicy: {
+          days: 30
+          enabled: true 
+        }
+      }
+    ]
+  }
+}
+//*****************************************************************************************************
+
+
+// Application Insights
+//*****************************************************************************************************
+resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = if (enableAppInsights) {
+  name: 'Insights-${functionAppName}'
+  location: location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    Request_Source: 'rest'
+  }
+}
+//*****************************************************************************************************

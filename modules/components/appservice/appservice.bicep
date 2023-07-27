@@ -67,7 +67,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-02-01' = if (!
 // Diagnostic Settings
 //*****************************************************************************************************
 resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'diagset-${appServiceAppName}'
+  name: 'diag-${appServiceAppName}'
   scope: appServiceApp
   properties: {
     workspaceId: workspaceId
