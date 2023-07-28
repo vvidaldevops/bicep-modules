@@ -36,9 +36,6 @@ param workspaceId string
 
 @description('Indicates whether AppServicePlan should be created or using an existing one.')
 param createNewAppServicePlan bool
-
-// @description('Resource Tags')
-// param tags string
 //*****************************************************************************************************
 
 

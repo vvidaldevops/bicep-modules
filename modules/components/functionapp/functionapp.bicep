@@ -42,17 +42,18 @@ param pvtEndpointSubnetId string
 ])
 param functionWorkerRuntime string
 
-
 @description('ID from existing App Service Plan')
 param farmId string
 
 // var functionWorkerRuntime = runtime
 
-@description('The Storage Account tier')
-param funcStorageAccountTier string
+// @description('The Storage Account tier')
+// param funcStorageAccountTier string
 
-@description('The Storage Account tier')
-param funcStorageAccessTier string
+// @description('The Storage Account tier')
+// param funcStorageAccessTier string
+
+param funcStorageAccountName string
 
 // @secure()
 // param funcStorageString object 
@@ -60,9 +61,10 @@ param funcStorageAccessTier string
 
 // Variables
 //*****************************************************************************************************
-var storageKind = 'StorageV2'
+// var storageKind = 'StorageV2'
 //*****************************************************************************************************
 
+/*
 // Storage Account for FunctionApp
 //*****************************************************************************************************
 resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
@@ -105,6 +107,15 @@ resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
 // output storageAccountName string = funcStorageAccountName.name
 // https://github.com/Azure/bicep/issues/2163 // https://stackoverflow.com/questions/47985364/listkeys-for-azure-function-app/47985475#47985475
 //*****************************************************************************************************
+*/
+
+
+// Storage Account for FunctionApp
+//*****************************************************************************************************
+resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
+  name: funcStorageAccountName
+}
+//*****************************************************************************************************
 
 
 // Function App
@@ -122,13 +133,11 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
       appSettings: [
         {
           name: 'AzureWebJobsStorage'
-          // value: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageString.listKeys().keys[0].value}'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
         }
         {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
-          // value: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
         }
         {
           name: 'WEBSITE_CONTENTSHARE'

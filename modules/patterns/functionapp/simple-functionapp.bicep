@@ -85,24 +85,24 @@ param funcStorageAccessTier string
   }  
 //*****************************************************************************************************
 
-/*
+
 // Storage Account for Function App
 // https://github.com/Azure/bicep/issues/2163 // https://stackoverflow.com/questions/47985364/listkeys-for-azure-function-app/47985475#47985475
 //*****************************************************************************************************
+
 // module storageAccountModule 'br:vidalabacr.azurecr.io/bicep/components/storage-account:v1.0.0' = {
   module functionStorageAccountModule '../../../modules/components/storage-account/storage.bicep' = {
     name: 'funcStorageAccountModule'
     params: {
-      storageAccountName: 'func-${storageAccountName}'
-      location: location
+      // storageAccountName: 'func-${storageAccountName}'
+      // location: location
       accountTier: accountTier
       accessTier: accessTier
       workspaceId: workspaceId
-      // tags: tags
+      tags: tags
     }
   }
 //*****************************************************************************************************
-*/
 
 
 // Function App
@@ -120,12 +120,10 @@ module functionAppModule 'br:vidalabacr.azurecr.io/bicep/components/functionapp:
     appId: appId
     appname: appname    
     farmId: createNewAppServicePlan ? appServicePlanModule.outputs.farmId : appServicePlanId
-    // funcStorageAccountName: funcStorageAccountName
     functionWorkerRuntime: functionWorkerRuntime
     funcStorageAccountTier: funcStorageAccountTier
     funcStorageAccessTier: funcStorageAccessTier
-    // funcStorageAccountName: functionStorageAccountModule.outputs.storageAccountName
-    // funcStorageString: functionStorageAccountModule.outputs.storageAccountId  // Known issue
+    funcStorageAccountName: functionStorageAccountModule.outputs.storageAccountName
     workspaceId: workspaceId
     pvtEndpointSubnetId: pvtEndpointSubnetId
     tags: tags
