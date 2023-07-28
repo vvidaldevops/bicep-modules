@@ -140,8 +140,12 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
           value: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
         }
         {
-          name: 'WEBSITE_CONTENTSHARE'
-          value: 'POC'
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: applicationInsights.properties.InstrumentationKey
+        }
+        {
+          name: 'FUNCTIONS_WORKER_RUNTIME'
+          value: functionWorkerRuntime
         }
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
@@ -152,13 +156,9 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
           value: '~14'
         }
         {
-          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: applicationInsights.properties.InstrumentationKey
-        }
-        {
-          name: 'FUNCTIONS_WORKER_RUNTIME'
-          value: functionWorkerRuntime
-        }
+          name: 'ContentStorageAccount'
+          value: funcStorageAccountName
+        }   
       ]
       ftpsState: 'FtpsOnly'
       minTlsVersion: '1.2'
