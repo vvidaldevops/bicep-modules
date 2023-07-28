@@ -1,10 +1,32 @@
+// Common Parameters
+//*****************************************************************************************************
+@description('The Azure region into which the resources should be deployed.')
+param location string = resourceGroup().location
+
+@allowed([ 'set', 'setf', 'jmf', 'jmfe' ])
+param bu string
+
+@allowed([ 'poc', 'dev', 'qa', 'uat', 'prd' ])
+param stage string
+
+@maxLength(6)
+param role string
+
+@maxLength(2)
+param appId string
+
+@maxLength(6)
+param appname string
+
+@description('Resource Tags')
+param tags object
+//*****************************************************************************************************
+
+
 // Parameters
 //*****************************************************************************************************
-@description('The name of the function app that you wish to create.')
-param functionAppName string
-
-@description('Location for all resources.')
-param location string = resourceGroup().location
+// @description('The name of the function app that you wish to create.')
+// param functionAppName string
 
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
@@ -12,7 +34,6 @@ param workspaceId string
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
 
-/*
 @description('The language worker runtime to load in the function app.')
 @allowed([
   'node'
@@ -20,8 +41,9 @@ param pvtEndpointSubnetId string
   'java'
 ])
 param functionWorkerRuntime string
-*/
 
+
+@description('ID from existing App Service Plan')
 param farmId string
 
 // var functionWorkerRuntime = runtime
@@ -32,8 +54,6 @@ param funcStorageAccountTier string
 @description('The Storage Account tier')
 param funcStorageAccessTier string
 
-param funcStorageAccountName string
-
 // @secure()
 // param funcStorageString object 
 //*****************************************************************************************************
@@ -43,12 +63,12 @@ param funcStorageAccountName string
 var storageKind = 'StorageV2'
 //*****************************************************************************************************
 
-// Function Storage Account
+// Storage Account for FunctionApp
 //*****************************************************************************************************
 resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
-  name: funcStorageAccountName
+  // name: funcStorageAccountName
+  name: toLower('funcstg${bu}${stage}${appname}${role}${appId}')
   location: location
-  // tags: tags
   kind: storageKind
   sku: {
     name: funcStorageAccountTier
@@ -78,6 +98,7 @@ resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
     }
     supportsHttpsTrafficOnly: true 
   }
+  tags: tags
 }
 
 // output storageAccountId string = funcStorageAccount.id
@@ -88,8 +109,8 @@ resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
 
 // Function App
 //*****************************************************************************************************
-resource FunctionApp 'Microsoft.Web/sites@2022-03-01' = {
-  name: functionAppName
+resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
+  name: toLower('funcapp-${bu}-${stage}-${appname}-${role}-${appId}')
   location: location
   kind: 'functionapp'
   // identity: {
@@ -102,16 +123,16 @@ resource FunctionApp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'AzureWebJobsStorage'
           // value: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageString.listKeys().keys[0].value}'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
         }
         {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
           // value: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
         }
         {
           name: 'WEBSITE_CONTENTSHARE'
-          value: toLower(functionAppName)
+          value: 'POC'
         }
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
@@ -127,8 +148,7 @@ resource FunctionApp 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'FUNCTIONS_WORKER_RUNTIME'
-          // value: functionWorkerRuntime
-          value: 'dotnet'
+          value: functionWorkerRuntime
         }
       ]
       ftpsState: 'FtpsOnly'
@@ -136,6 +156,7 @@ resource FunctionApp 'Microsoft.Web/sites@2022-03-01' = {
     }
     httpsOnly: true
   }
+  tags: tags
 }
 //*****************************************************************************************************
 
@@ -143,8 +164,8 @@ resource FunctionApp 'Microsoft.Web/sites@2022-03-01' = {
 // Diagnostic Settings
 //*****************************************************************************************************
 resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'diag-${functionAppName}'
-  scope: FunctionApp
+  name: 'diag-${functionApp.name}'
+  scope: functionApp
   properties: {
     workspaceId: workspaceId
     metrics: [
@@ -165,7 +186,8 @@ resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-previe
 // Application Insights
 //*****************************************************************************************************
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
-  name: 'Insights-${functionAppName}'
+  // name: 'insights-${functionApp.name}'
+  name: 'insights-function-check'
   location: location
   kind: 'web'
   properties: {
@@ -179,7 +201,7 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
 // Private Endpoint
 //*****************************************************************************************************
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-02-01' = if (!empty(pvtEndpointSubnetId)) {
-  name: '${functionAppName}-PvtEndpoint'
+  name: '${functionApp.name}-PvtEndpoint'
   location: location
   properties: {
     subnet: {
@@ -187,9 +209,9 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-02-01' = if (!
     }
     privateLinkServiceConnections: [
       {
-        name: '${functionAppName}-PvtLink'
+        name: '${functionApp.name}-PvtLink'
         properties:{
-          privateLinkServiceId: FunctionApp.id
+          privateLinkServiceId: functionApp.id
           groupIds:[
             'sites'
           ]
@@ -197,5 +219,6 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-02-01' = if (!
       }
     ]
   }
+  tags: tags
 }  
 //*****************************************************************************************************

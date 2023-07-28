@@ -1,10 +1,32 @@
-// Parameters
+// Common Parameters
 //*****************************************************************************************************
 @description('The Azure region into which the resources should be deployed.')
-param location string
+param location string = resourceGroup().location
 
-@description('The name of the App Service app.')
-param appServiceAppName string
+@allowed([ 'set', 'setf', 'jmf', 'jmfe' ])
+param bu string
+
+@allowed([ 'poc', 'dev', 'qa', 'uat', 'prd' ])
+param stage string
+
+@maxLength(6)
+param role string
+
+@maxLength(2)
+param appId string
+
+@maxLength(6)
+param appname string
+
+@description('Resource Tags')
+param tags object
+//*****************************************************************************************************
+
+
+// Parameters
+//*****************************************************************************************************
+// @description('The name of the App Service app.')
+// param appServiceAppName string
 
 @description('The ID of App Service Plan.')
 param farmId string
@@ -14,9 +36,6 @@ param workspaceId string
 
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
-
-// @description('Resource Tags')
-// param tags string
 //*****************************************************************************************************
 
 
@@ -25,16 +44,17 @@ param pvtEndpointSubnetId string
 var httpsOnly = true
 //*****************************************************************************************************
 
+
 // App Service
 //*****************************************************************************************************
 resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
-  name: appServiceAppName
+  name: toLower('appsvc-${bu}-${stage}-${appname}-${role}-${appId}')
   location: location
   properties: {
     serverFarmId: farmId
     httpsOnly: httpsOnly
   }
-  // tags: TagPocEnvironment
+  tags: tags
 }
 
 output appServiceAppHostName string = appServiceApp.properties.defaultHostName
@@ -44,7 +64,7 @@ output appServiceAppHostName string = appServiceApp.properties.defaultHostName
 // Private Endpoint
 //*****************************************************************************************************
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-02-01' = if (!empty(pvtEndpointSubnetId)) {
-  name: '${appServiceAppName}-PvtEndpoint'
+  name: 'pvtEndpoint-${appServiceApp.name}'
   location: location
   properties: {
     subnet: {
@@ -52,7 +72,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-02-01' = if (!
     }
     privateLinkServiceConnections: [
       {
-        name: '${appServiceAppName}-PvtLink'
+        name: 'pvtLink-${appServiceApp.name}'
         properties:{
           privateLinkServiceId: appServiceApp.id
           groupIds:[
@@ -62,6 +82,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-02-01' = if (!
       }
     ]
   }
+  tags: tags
 }  
 //*****************************************************************************************************
 
@@ -69,7 +90,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-02-01' = if (!
 // Diagnostic Settings
 //*****************************************************************************************************
 resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'diag-${appServiceAppName}'
+  name: 'diag-${appServiceApp.name}'
   scope: appServiceApp
   properties: {
     workspaceId: workspaceId
@@ -96,11 +117,10 @@ resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-previe
 //*****************************************************************************************************
 
 
-/*
 // Application Insights
 //*****************************************************************************************************
-resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = if (enableAppInsights) {
-  name: 'Insights-${functionAppName}'
+resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: 'insights-${appServiceApp.name}'
   location: location
   kind: 'web'
   properties: {
@@ -109,4 +129,3 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = if (en
   }
 }
 //*****************************************************************************************************
-*/

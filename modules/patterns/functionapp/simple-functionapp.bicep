@@ -1,11 +1,32 @@
+// Common Parameters
+//*****************************************************************************************************
+@allowed([ 'set', 'setf', 'jmf', 'jmfe' ])
+param bu string
+
+@allowed([ 'poc', 'dev', 'qa', 'uat', 'prd' ])
+param stage string
+
+@maxLength(6)
+param role string
+
+@maxLength(2)
+param appId string
+
+@maxLength(6)
+param appname string
+
+@description('Resource Tags')
+param tags object
+//*****************************************************************************************************
+
 
 // Parameters
 //*****************************************************************************************************
-@description('The Azure region into which the resources should be deployed.')
-param location string
+// @description('The Azure region into which the resources should be deployed.')
+// param location string
 
-@description('The name of the App Service plan.')
-param appServicePlanName string
+// @description('The name of the App Service plan.')
+// param appServicePlanName string
 
 @description('The name of the App Service plan SKU.')
 param appServicePlanSkuName string
@@ -19,14 +40,16 @@ param createNewAppServicePlan bool
 @description('If the above option is = true, the existing App Service Plan ID should be provided.')
 param appServicePlanId string
 
-// @description('The ID from Private Endpoint Subnet.')
-// param pvtEndpointSubnetId string
+@description('The ID from Private Endpoint Subnet.')
+param pvtEndpointSubnetId string
 
-// Function App Parameters
-@description('The Name from Function App')
-param functionAppName string
-
-param funcStorageAccountName string
+@description('The language worker runtime to load in the function app.')
+@allowed([
+  'node'
+  'dotnet'
+  'java'
+])
+param functionWorkerRuntime string
 
 
 // Storage Account Parameters
@@ -38,11 +61,6 @@ param funcStorageAccountTier string
 
 @description('The Storage Account tier')
 param funcStorageAccessTier string
-
-param pvtEndpointSubnetId string
-
-// @description('Resource Tags')
-// param tags string
 //*****************************************************************************************************
 
 
@@ -52,18 +70,23 @@ param pvtEndpointSubnetId string
   module appServicePlanModule '../../../modules/components/appserviceplan/appserviceplan.bicep' = {
     name: 'appServicePlanModule'
     params: {
-      appServicePlanName: appServicePlanName
+      bu: bu
+      stage: stage
+      role: role
+      appId: appId
+      appname: appname
+      // appServicePlanName: appServicePlanName
       appServicePlanSkuName: appServicePlanSkuName
       createNewAppServicePlan: createNewAppServicePlan
-      location: location
+      // location: location
       workspaceId: workspaceId
-      // tags: tags
+      tags: tags
     }
   }  
 //*****************************************************************************************************
 
 /*
-// Function Storage Account
+// Storage Account for Function App
 // https://github.com/Azure/bicep/issues/2163 // https://stackoverflow.com/questions/47985364/listkeys-for-azure-function-app/47985475#47985475
 //*****************************************************************************************************
 // module storageAccountModule 'br:vidalabacr.azurecr.io/bicep/components/storage-account:v1.0.0' = {
@@ -81,24 +104,31 @@ param pvtEndpointSubnetId string
 //*****************************************************************************************************
 */
 
+
 // Function App
 //*****************************************************************************************************
-module FunctionAppModule 'br:vidalabacr.azurecr.io/bicep/components/functionapp:v1.0.0' = {
+module functionAppModule 'br:vidalabacr.azurecr.io/bicep/components/functionapp:v1.0.0' = {
 // module functionAppModule '../../../modules/components/functionapp/functionapp.bicep' ={
   name: 'functionAppModule'
   params: {
-    functionAppName: functionAppName
-    location: location
+    // functionAppName: functionAppName
+    // location: location
     // storageAccountName: storageAccountName
+    bu: bu
+    stage: stage
+    role: role
+    appId: appId
+    appname: appname    
     farmId: createNewAppServicePlan ? appServicePlanModule.outputs.farmId : appServicePlanId
-    funcStorageAccountName: funcStorageAccountName
+    // funcStorageAccountName: funcStorageAccountName
+    functionWorkerRuntime: functionWorkerRuntime
     funcStorageAccountTier: funcStorageAccountTier
     funcStorageAccessTier: funcStorageAccessTier
     // funcStorageAccountName: functionStorageAccountModule.outputs.storageAccountName
     // funcStorageString: functionStorageAccountModule.outputs.storageAccountId  // Known issue
     workspaceId: workspaceId
     pvtEndpointSubnetId: pvtEndpointSubnetId
-    // tags: tags
+    tags: tags
   }
 }
 //*****************************************************************************************************

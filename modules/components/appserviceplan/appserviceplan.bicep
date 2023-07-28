@@ -1,10 +1,32 @@
-// Parameters
+// Common Parameters
 //*****************************************************************************************************
 @description('The Azure region into which the resources should be deployed.')
-param location string
+param location string = resourceGroup().location
 
-@description('The name of the App Service plan.')
-param appServicePlanName string
+@allowed([ 'set', 'setf', 'jmf', 'jmfe' ])
+param bu string
+
+@allowed([ 'poc', 'dev', 'qa', 'uat', 'prd' ])
+param stage string
+
+@maxLength(6)
+param role string
+
+@maxLength(2)
+param appId string
+
+@maxLength(6)
+param appname string
+
+@description('Resource Tags')
+param tags object
+//*****************************************************************************************************
+
+
+// Parameters
+//*****************************************************************************************************
+// @description('The name of the App Service plan.')
+// param appServicePlanName string
 
 @description('The name of the App Service plan SKU.')
 param appServicePlanSkuName string
@@ -23,11 +45,12 @@ param createNewAppServicePlan bool
 // App Service Plan
 //*****************************************************************************************************
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = if (createNewAppServicePlan) {
-  name: appServicePlanName
+  name: toLower('appsvcplan-${bu}-${stage}-${appname}-${role}-${appId}')
   location: location
   sku: {
     name: appServicePlanSkuName
   }
+  tags: tags
 }
 
 @description('Output the farm id')
@@ -38,7 +61,7 @@ output farmId string = appServicePlan.id
 // Diagnostic Settings
 //*****************************************************************************************************
 resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'diag-${appServicePlanName}'
+  name: 'diag-${appServicePlan.name}'
   scope: appServicePlan
   properties: {
     workspaceId: workspaceId

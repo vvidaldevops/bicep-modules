@@ -1,16 +1,38 @@
+// Common Parameters
+//*****************************************************************************************************
+@allowed([ 'set', 'setf', 'jmf', 'jmfe' ])
+param bu string
+
+@allowed([ 'poc', 'dev', 'qa', 'uat', 'prd' ])
+param stage string
+
+@maxLength(6)
+param role string
+
+@maxLength(2)
+param appId string
+
+@maxLength(6)
+param appname string
+
+@description('Resource Tags')
+param tags object
+//*****************************************************************************************************
+
+
 // Parameters
 //*****************************************************************************************************
-@description('The Azure region into which the resources should be deployed.')
-param location string
+// @description('The Azure region into which the resources should be deployed.')
+// param location string
 
-@description('The name of the App Service plan.')
-param appServicePlanName string
+// @description('The name of the App Service plan.')
+// param appServicePlanName string
 
 @description('The name of the App Service plan SKU.')
 param appServicePlanSkuName string
 
-@description('The name of the App Service.')
-param appServiceAppName string
+// @description('The name of the App Service.')
+// param appServiceAppName string
 
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
@@ -24,8 +46,7 @@ param appServicePlanId string
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
 
-// @description('Resource Tags')
-// param tags string
+
 //*****************************************************************************************************
 
 
@@ -35,12 +56,17 @@ module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appservic
 //  module appServicePlanModule '../../../modules/components/appserviceplan/appserviceplan.bicep' = {
   name: 'appServicePlanModule'
   params: {
-    appServicePlanName: appServicePlanName
+    bu: bu
+    stage: stage
+    role: role
+    appId: appId
+    appname: appname
+    // appServicePlanName: appServicePlanName
     appServicePlanSkuName: appServicePlanSkuName
     createNewAppServicePlan: createNewAppServicePlan
-    location: location
+    // location: location
     workspaceId: workspaceId
-    // tags: tags
+    tags: tags
   }
 }
 //*****************************************************************************************************
@@ -52,12 +78,17 @@ module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appservic
   module appServiceModule '../../../modules/components/appservice/appservice.bicep' = {
   name: 'appServiceModule'
   params: {
-    appServiceAppName: appServiceAppName
-    location: location
+    bu: bu
+    stage: stage
+    role: role
+    appId: appId
+    appname: appname
+    // appServiceAppName: appServiceAppName
+    // location: location
     farmId: createNewAppServicePlan ? appServicePlanModule.outputs.farmId : appServicePlanId
     workspaceId: workspaceId
     pvtEndpointSubnetId: pvtEndpointSubnetId
-    // tags: tags
+    tags: tags
   }
 }
 //*****************************************************************************************************
