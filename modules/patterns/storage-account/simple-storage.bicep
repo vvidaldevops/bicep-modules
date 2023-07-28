@@ -1,5 +1,8 @@
 // Common Parameters
 //*****************************************************************************************************
+@description('The Azure region into which the resources should be deployed.')
+param location string
+
 @allowed([ 'set', 'setf', 'jmf', 'jmfe' ])
 param bu string
 
@@ -48,7 +51,7 @@ module storageAccountModule 'br:vidalabacr.azurecr.io/bicep/components/storage-a
     appId: appId
     appname: appname
     // storageAccountName: storageAccountName
-    // location: location
+    location: location
     accountTier: accountTier
     accessTier: accessTier
     workspaceId: workspaceId

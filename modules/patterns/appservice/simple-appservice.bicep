@@ -1,5 +1,8 @@
 // Common Parameters
 //*****************************************************************************************************
+@description('The Azure region into which the resources should be deployed.')
+param location string
+
 @allowed([ 'set', 'setf', 'jmf', 'jmfe' ])
 param bu string
 
@@ -22,9 +25,6 @@ param tags object
 
 // Parameters
 //*****************************************************************************************************
-// @description('The Azure region into which the resources should be deployed.')
-// param location string
-
 // @description('The name of the App Service plan.')
 // param appServicePlanName string
 
@@ -56,6 +56,7 @@ module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appservic
 //  module appServicePlanModule '../../../modules/components/appserviceplan/appserviceplan.bicep' = {
   name: 'appServicePlanModule'
   params: {
+    location: location
     bu: bu
     stage: stage
     role: role
@@ -64,7 +65,6 @@ module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appservic
     // appServicePlanName: appServicePlanName
     appServicePlanSkuName: appServicePlanSkuName
     createNewAppServicePlan: createNewAppServicePlan
-    // location: location
     workspaceId: workspaceId
     tags: tags
   }
@@ -78,13 +78,13 @@ module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appservic
   module appServiceModule '../../../modules/components/appservice/appservice.bicep' = {
   name: 'appServiceModule'
   params: {
+    location: location
     bu: bu
     stage: stage
     role: role
     appId: appId
     appname: appname
     // appServiceAppName: appServiceAppName
-    // location: location
     farmId: createNewAppServicePlan ? appServicePlanModule.outputs.farmId : appServicePlanId
     workspaceId: workspaceId
     pvtEndpointSubnetId: pvtEndpointSubnetId

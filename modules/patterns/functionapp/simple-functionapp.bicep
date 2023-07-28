@@ -1,5 +1,8 @@
 // Common Parameters
 //*****************************************************************************************************
+@description('The Azure region into which the resources should be deployed.')
+param location string
+
 @allowed([ 'set', 'setf', 'jmf', 'jmfe' ])
 param bu string
 
@@ -22,9 +25,6 @@ param tags object
 
 // Parameters
 //*****************************************************************************************************
-// @description('The Azure region into which the resources should be deployed.')
-// param location string
-
 // @description('The name of the App Service plan.')
 // param appServicePlanName string
 
@@ -56,11 +56,11 @@ param functionWorkerRuntime string
 // @description('The Name from Storage Account')
 // param storageAccountName string
 
-@description('The Storage Account tier')
-param funcStorageAccountTier string
+// @description('The Storage Account tier')
+// param funcStorageAccountTier string
 
-@description('The Storage Account tier')
-param funcStorageAccessTier string
+// @description('The Storage Account tier')
+// param funcStorageAccessTier string
 //*****************************************************************************************************
 
 
@@ -70,6 +70,7 @@ param funcStorageAccessTier string
   module appServicePlanModule '../../../modules/components/appserviceplan/appserviceplan.bicep' = {
     name: 'appServicePlanModule'
     params: {
+      location: location
       bu: bu
       stage: stage
       role: role
@@ -78,7 +79,6 @@ param funcStorageAccessTier string
       // appServicePlanName: appServicePlanName
       appServicePlanSkuName: appServicePlanSkuName
       createNewAppServicePlan: createNewAppServicePlan
-      // location: location
       workspaceId: workspaceId
       tags: tags
     }
@@ -94,10 +94,14 @@ param funcStorageAccessTier string
   module functionStorageAccountModule '../../../modules/components/storage-account/storage.bicep' = {
     name: 'funcStorageAccountModule'
     params: {
-      // storageAccountName: 'func-${storageAccountName}'
-      // location: location
-      accountTier: accountTier
-      accessTier: accessTier
+      location: location
+      bu: bu
+      stage: stage
+      role: role
+      appId: appId
+      appname: appname
+      // accountTier: accountTier
+      // accessTier: accessTier
       workspaceId: workspaceId
       tags: tags
     }
@@ -112,8 +116,8 @@ module functionAppModule 'br:vidalabacr.azurecr.io/bicep/components/functionapp:
   name: 'functionAppModule'
   params: {
     // functionAppName: functionAppName
-    // location: location
     // storageAccountName: storageAccountName
+    location: location
     bu: bu
     stage: stage
     role: role
