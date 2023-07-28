@@ -58,6 +58,8 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
 output storageAccountId string = storageAccount.id
 output storageAccountName string = storageAccount.name
 
+// output primaryKey string = storageAccount.listKeys().keys[0].value 
+// https://github.com/Azure/bicep/issues/2163 // https://stackoverflow.com/questions/47985364/listkeys-for-azure-function-app/47985475#47985475
 //*****************************************************************************************************
 
 

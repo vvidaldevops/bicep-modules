@@ -92,3 +92,19 @@ resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-previe
   }
 }
 //*****************************************************************************************************
+
+
+/*
+// Application Insights
+//*****************************************************************************************************
+resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = if (enableAppInsights) {
+  name: 'Insights-${functionAppName}'
+  location: location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    Request_Source: 'rest'
+  }
+}
+//*****************************************************************************************************
+*/
