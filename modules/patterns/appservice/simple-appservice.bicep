@@ -52,8 +52,7 @@ param pvtEndpointSubnetId string
 
 // App Service Plan
 //*****************************************************************************************************
-module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1.0.0' = {
-//  module appServicePlanModule '../../../modules/components/appserviceplan/appserviceplan.bicep' = {
+module appServicePlanModule 'br/ACR-LAB:bicep/components/appserviceplan:v1.0.0' = {
   name: 'appServicePlanModule'
   params: {
     location: location
@@ -74,8 +73,7 @@ module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appservic
 
 // App Service
 //*****************************************************************************************************
-// module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1.0.0' = {
-  module appServiceModule '../../../modules/components/appservice/appservice.bicep' = {
+module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1.0.0' = {
   name: 'appServiceModule'
   params: {
     location: location

@@ -51,68 +51,62 @@ param pvtEndpointSubnetId string
 ])
 param functionWorkerRuntime string
 
-
 // Storage Account Parameters
 // @description('The Name from Storage Account')
 // param storageAccountName string
 
-// @description('The Storage Account tier')
-// param funcStorageAccountTier string
+@description('The Storage Account tier')
+param funcStorageAccountTier string
 
-// @description('The Storage Account tier')
-// param funcStorageAccessTier string
+@description('The Storage Account tier')
+param funcStorageAccessTier string
 //*****************************************************************************************************
 
 
 // App Service Plan
 //*****************************************************************************************************
-// module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1.0.0' = {
-  module appServicePlanModule '../../../modules/components/appserviceplan/appserviceplan.bicep' = {
-    name: 'appServicePlanModule'
-    params: {
-      location: location
-      bu: bu
-      stage: stage
-      role: role
-      appId: appId
-      appname: appname
-      // appServicePlanName: appServicePlanName
-      appServicePlanSkuName: appServicePlanSkuName
-      createNewAppServicePlan: createNewAppServicePlan
-      workspaceId: workspaceId
-      tags: tags
-    }
-  }  
+module appServicePlanModule 'br/ACR-LAB:bicep/components/appserviceplan:v1.0.0' = {
+  name: 'appServicePlanModule'
+  params: {
+    location: location
+    bu: bu
+    stage: stage
+    role: role
+    appId: appId
+    appname: appname
+    // appServicePlanName: appServicePlanName
+    appServicePlanSkuName: appServicePlanSkuName
+    createNewAppServicePlan: createNewAppServicePlan
+    workspaceId: workspaceId
+    tags: tags
+  }
+}  
 //*****************************************************************************************************
 
 
 // Storage Account for Function App
-// https://github.com/Azure/bicep/issues/2163 // https://stackoverflow.com/questions/47985364/listkeys-for-azure-function-app/47985475#47985475
 //*****************************************************************************************************
-
-// module storageAccountModule 'br:vidalabacr.azurecr.io/bicep/components/storage-account:v1.0.0' = {
-  module functionStorageAccountModule '../../../modules/components/storage-account/storage.bicep' = {
-    name: 'funcStorageAccountModule'
-    params: {
-      location: location
-      bu: bu
-      stage: stage
-      role: role
-      appId: appId
-      appname: appname
-      // accountTier: accountTier
-      // accessTier: accessTier
-      workspaceId: workspaceId
-      tags: tags
-    }
+module functionStorageAccountModule 'br/ACR-LAB:bicep/components/storage-account:v1.0.0' = {
+  name: 'funcStorageAccountModule'
+  params: {
+    location: location
+    bu: bu
+    stage: stage
+    role: role
+    appId: appId
+    appname: appname
+    accountTier: funcStorageAccountTier
+    accessTier: funcStorageAccessTier
+    workspaceId: workspaceId
+    tags: tags
   }
+}
 //*****************************************************************************************************
 
 
 // Function App
 //*****************************************************************************************************
-module functionAppModule 'br:vidalabacr.azurecr.io/bicep/components/functionapp:v1.0.0' = {
-// module functionAppModule '../../../modules/components/functionapp/functionapp.bicep' ={
+module functionAppModule 'br/ACR-LAB:bicep/components/functionapp:v1.0.0' = {
   name: 'functionAppModule'
   params: {
     // functionAppName: functionAppName
