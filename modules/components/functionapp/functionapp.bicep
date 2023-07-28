@@ -148,6 +148,10 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
           value: functionWorkerRuntime
         }
         {
+          name: 'WEBSITE_CONTENTSHARE'
+          value: toLower('funcapp-${bu}-${stage}-${appname}-${role}-${appId}')
+        }
+        {
           name: 'FUNCTIONS_EXTENSION_VERSION'
           value: '~4'
         }
