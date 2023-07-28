@@ -83,7 +83,7 @@ param pvtEndpointSubnetId string
 
 // Function App
 //*****************************************************************************************************
-module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/functionapp:v1.0.0' = {
+module FunctionAppModule 'br:vidalabacr.azurecr.io/bicep/components/functionapp:v1.0.0' = {
 // module functionAppModule '../../../modules/components/functionapp/functionapp.bicep' ={
   name: 'functionAppModule'
   params: {

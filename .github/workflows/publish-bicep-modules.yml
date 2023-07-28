@@ -82,7 +82,6 @@ jobs:
             fi
             cd - > /dev/null
             # Waiting for components to be published 
-            sleep 20
           done
 
           # Loop through Storage Account components directory
