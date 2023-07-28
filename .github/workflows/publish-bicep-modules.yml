@@ -68,6 +68,23 @@ jobs:
             cd - > /dev/null
           done
 
+          # Loop through Function App components directory
+          for d in functionapp
+          do
+            cd $d
+            version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
+            then 
+              echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
+              az bicep publish --file functionapp.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
+            else 
+              echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version as it already exists";
+            fi
+            cd - > /dev/null
+            # Waiting for components to be published 
+            sleep 20
+          done
+
           # Loop through Storage Account components directory
           for d in storage-account
           do
@@ -83,7 +100,7 @@ jobs:
             cd - > /dev/null
             # Waiting for components to be published 
             sleep 20
-          done           
+          done                
         working-directory: modules/components
 
       # Publish Bicep Patterns Modules
@@ -101,6 +118,21 @@ jobs:
             then 
               echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/patterns/$d:$version";
               az bicep publish --file simple-appservice.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/patterns/$d:$version";
+            else 
+              echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/patterns/$d:$version as it already exists";
+            fi
+            cd - > /dev/null
+          done
+
+          # Loop through App Service patterns directory
+          for d in functionapp
+          do
+            cd $d
+            version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/patterns/$d:$version 2>/dev/null)" ]; 
+            then 
+              echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/patterns/$d:$version";
+              az bicep publish --file simple-functionapp.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/patterns/$d:$version";
             else 
               echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/patterns/$d:$version as it already exists";
             fi

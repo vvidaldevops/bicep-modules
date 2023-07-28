@@ -22,8 +22,8 @@ param workspaceId string
 
 // Storage Account Module
 //*****************************************************************************************************
-// module storageAccountModule 'br:vidalabacr.azurecr.io/bicep/components/storage-account:v1.0.0' = {
-  module storageAccountModule '../../../modules/components/storage-account/storage.bicep' = {
+module storageAccountModule 'br:vidalabacr.azurecr.io/bicep/components/storage-account:v1.0.0' = {
+// module storageAccountModule '../../../modules/components/storage-account/storage.bicep' = {
   name: 'storageAccountModule'
   params: {
     storageAccountName: storageAccountName

@@ -31,8 +31,8 @@ param pvtEndpointSubnetId string
 
 // App Service Plan
 //*****************************************************************************************************
-// module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1.0.0' = {
-  module appServicePlanModule '../../../modules/components/appserviceplan/appserviceplan.bicep' = {
+module appServicePlanModule 'br:vidalabacr.azurecr.io/bicep/components/appserviceplan:v1.0.0' = {
+//  module appServicePlanModule '../../../modules/components/appserviceplan/appserviceplan.bicep' = {
   name: 'appServicePlanModule'
   params: {
     appServicePlanName: appServicePlanName
