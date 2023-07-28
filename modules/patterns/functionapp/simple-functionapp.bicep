@@ -119,8 +119,6 @@ module functionAppModule 'br/ACR-LAB:bicep/components/functionapp:v1.0.0' = {
     appname: appname    
     farmId: createNewAppServicePlan ? appServicePlanModule.outputs.farmId : appServicePlanId
     functionWorkerRuntime: functionWorkerRuntime
-    funcStorageAccountTier: funcStorageAccountTier
-    funcStorageAccessTier: funcStorageAccessTier
     funcStorageAccountName: functionStorageAccountModule.outputs.storageAccountName
     workspaceId: workspaceId
     pvtEndpointSubnetId: pvtEndpointSubnetId
