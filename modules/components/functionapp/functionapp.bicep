@@ -6,10 +6,11 @@ param functionAppName string
 @description('Location for all resources.')
 param location string = resourceGroup().location
 
-/*
+@description('The ID of Log Analytics Workspace.')
+param workspaceId string
+
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
-*/
 
 /*
 @description('The language worker runtime to load in the function app.')
@@ -35,13 +36,12 @@ param funcStorageAccountName string
 
 // @secure()
 // param funcStorageString object 
-
-param workspaceId string
-
-param pvtEndpointSubnetId string
-
 //*****************************************************************************************************
 
+// Variables
+//*****************************************************************************************************
+var storageKind = 'StorageV2'
+//*****************************************************************************************************
 
 // Function Storage Account
 //*****************************************************************************************************
@@ -49,12 +49,13 @@ resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
   name: funcStorageAccountName
   location: location
   // tags: tags
-  kind: 'StorageV2'
+  kind: storageKind
   sku: {
     name: funcStorageAccountTier
   }
   properties: {
-    allowBlobPublicAccess: false
+    // Testing to create Function App
+    allowBlobPublicAccess: true
     accessTier: funcStorageAccessTier
     allowCrossTenantReplication: false
     allowSharedKeyAccess: true

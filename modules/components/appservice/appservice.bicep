@@ -12,9 +12,6 @@ param farmId string
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 
-// @description('Indicates whether a Privante endpoint should be created.')
-// param useAppPrivateEndpoint bool
-
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
 
@@ -23,6 +20,11 @@ param pvtEndpointSubnetId string
 //*****************************************************************************************************
 
 
+// Variables
+//*****************************************************************************************************
+var httpsOnly = true
+//*****************************************************************************************************
+
 // App Service
 //*****************************************************************************************************
 resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
@@ -30,7 +32,7 @@ resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
   location: location
   properties: {
     serverFarmId: farmId
-    httpsOnly: true
+    httpsOnly: httpsOnly
   }
   // tags: TagPocEnvironment
 }
