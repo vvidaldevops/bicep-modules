@@ -135,10 +135,6 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
           name: 'AzureWebJobsStorage'
           value: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
         }
-        //{
-        //  name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
-        //  value: 'DefaultEndpointsProtocol=https;AccountName=${funcStorageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${funcStorageAccount.listKeys().keys[0].value}'
-        //}
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
           value: applicationInsights.properties.InstrumentationKey
@@ -147,22 +143,14 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
           name: 'FUNCTIONS_WORKER_RUNTIME'
           value: functionWorkerRuntime
         }
-        //{
-        // name: 'WEBSITE_CONTENTSHARE'
-        //  value: toLower('funcapp-${bu}-${stage}-${appname}-${role}-${appId}')
-        //}
-        {
-          name: 'FUNCTIONS_EXTENSION_VERSION'
-          value: '~4'
-        }
         {
           name: 'WEBSITE_NODE_DEFAULT_VERSION'
           value: '~14'
         }
         {
-          name: 'ContentStorageAccount'
-          value: funcStorageAccountName
-        }   
+          name: 'FUNCTIONS_EXTENSION_VERSION'
+          value: '~4'
+        }
       ]
       ftpsState: 'FtpsOnly'
       minTlsVersion: '1.2'
