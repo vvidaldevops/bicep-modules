@@ -38,8 +38,8 @@ param workspaceId string
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
 
-@description('The name from Service Endpoint Subnet.')
-param appServiceEndpointSubnetName string
+// @description('The name from Service Endpoint Subnet.')
+// param appServiceEndpointSubnetName string
 //*****************************************************************************************************
 
 // App Service Variables
@@ -51,9 +51,9 @@ var ftpsState = 'FtpsOnly'
 
 // Data Subnet to configure Service Endpoint
 //*****************************************************************************************************
-resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing = {
-  name : appServiceEndpointSubnetName
-}
+// resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing = {
+//   name : appServiceEndpointSubnetName
+// }
 //*****************************************************************************************************
 
 
@@ -65,7 +65,7 @@ resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
   kind: 'app'
   properties: {
     publicNetworkAccess: publicNetworkAccess
-    virtualNetworkSubnetId: subnet.id
+    // virtualNetworkSubnetId: subnet.id
     serverFarmId: farmId
     httpsOnly: httpsOnly
     siteConfig: {

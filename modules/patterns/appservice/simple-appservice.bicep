@@ -38,11 +38,8 @@ param appServicePlanKind string
 @description('The tier of the App Service plan.')
 param appServicePlanTier string
 
-// @description('Enable Service Endpoint in the subnet and associate the App Service.')
-// param enableServiceEndpoint bool
-
-@description('The name from Service Endpoint Subnet.')
-param appServiceEndpointSubnetName string
+// @description('The name from Service Endpoint Subnet.')
+// param appServiceEndpointSubnetName string
 //*****************************************************************************************************
 
 // App Service Parameters
@@ -97,7 +94,7 @@ module appServiceModule '../../components/appservice/appservice.bicep' = {
     role: role
     appId: appId
     appname: appname
-    appServiceEndpointSubnetName: appServiceEndpointSubnetName
+    // appServiceEndpointSubnetName: appServiceEndpointSubnetName
     farmId: createNewAppServicePlan ? appServicePlanModule.outputs.farmId : existingappServicePlanId
     workspaceId: workspaceId
     pvtEndpointSubnetId: pvtEndpointSubnetId
