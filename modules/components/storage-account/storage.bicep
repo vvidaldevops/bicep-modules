@@ -39,6 +39,9 @@ param accountTier string
 @description('The Storage Access tier')
 param accessTier string
 
+@description('Allow or Deny the storage public access. Default is false')
+param allowBlobPublicAccess bool = false
+
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 //*****************************************************************************************************
@@ -47,9 +50,6 @@ param workspaceId string
 //*****************************************************************************************************
 @description('Storage Kind')
 var storageKind = 'StorageV2'
-
-@description('Allow or Deny the storage public access. Default is false')
-var allowBlobPublicAccess = false   
 
 @description('Minimum TLS Vesion')
 var minimumTlsVersion = 'TLS1_2'

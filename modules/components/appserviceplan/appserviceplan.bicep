@@ -36,6 +36,12 @@ param appServicePrefix string
 @description('The name of the App Service plan SKU.')
 param appServicePlanSkuName string = 'B1'
 
+@description('The kind of the App Service plan.')
+param appServicePlanKind string = 'windows'
+
+@description('The tier of the App Service plan.')
+param appServicePlanTier string = 'Basic'
+
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 
@@ -60,7 +66,10 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = if (createNewAp
   location: location
   sku: {
     name: appServicePlanSkuName
+    capacity: 1
+    tier: appServicePlanTier
   }
+  kind: appServicePlanKind
   tags: tags
 }
 

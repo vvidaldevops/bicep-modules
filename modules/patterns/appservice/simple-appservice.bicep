@@ -31,6 +31,12 @@ param tags object
 //*****************************************************************************************************
 @description('The name of the App Service plan SKU.')
 param appServicePlanSkuName string
+
+@description('The kind of the App Service plan.')
+param appServicePlanKind string
+
+@description('The tier of the App Service plan.')
+param appServicePlanTier string
 //*****************************************************************************************************
 
 // App Service Parameters
@@ -63,6 +69,8 @@ module appServicePlanModule '../../components/appserviceplan/appserviceplan.bice
     appname: appname
     appServicePrefix: 'appsvcplan'
     appServicePlanSkuName: appServicePlanSkuName
+    appServicePlanKind: appServicePlanKind
+    appServicePlanTier: appServicePlanTier
     createNewAppServicePlan: createNewAppServicePlan
     workspaceId: workspaceId
     tags: tags

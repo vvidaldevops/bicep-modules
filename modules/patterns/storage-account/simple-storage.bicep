@@ -45,6 +45,9 @@ param accountTier string = 'Standard_LRS'
 @description('The Storage Account tier')
 param accessTier string
 
+@description('Allow or Deny the storage public access. Default is false')
+param allowBlobPublicAccess bool = false
+
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 //*****************************************************************************************************
@@ -65,6 +68,7 @@ module storageAccountModule '../../../modules/components/storage-account/storage
     location: location
     accountTier: accountTier
     accessTier: accessTier
+    allowBlobPublicAccess: allowBlobPublicAccess
     workspaceId: workspaceId
     tags: tags
   }

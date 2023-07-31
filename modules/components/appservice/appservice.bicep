@@ -29,9 +29,6 @@ param tags object
 
 // App Service Parameters
 //*****************************************************************************************************
-// @description('The name of the App Service app.')
-// param appServiceAppName string
-
 @description('The ID of App Service Plan.')
 param farmId string
 
@@ -53,9 +50,22 @@ var httpsOnly = true
 resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
   name: toLower('appsvc-${bu}-${stage}-${appname}-${role}-${appId}')
   location: location
+  kind: 'app'
   properties: {
     serverFarmId: farmId
     httpsOnly: httpsOnly
+    siteConfig: {
+      appSettings: [
+        {
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: applicationInsights.properties.InstrumentationKey
+        }
+        {
+          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+          value: applicationInsights.properties.ConnectionString
+        }
+      ]
+    }
   }
   tags: tags
 }
@@ -123,7 +133,7 @@ resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-previe
 // Application Insights Resource 
 //*****************************************************************************************************
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
-  name: 'insights-${appServiceApp.name}'
+  name: 'insights-appservice'
   location: location
   kind: 'web'
   properties: {
