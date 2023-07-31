@@ -34,7 +34,7 @@ param tags object
 param storagePrefix string
 
 @description('The Storage Account tier')
-param accountTier string
+param accountTier string = 'Standard_LRS'
 
 @description('The Storage Access tier')
 param accessTier string
