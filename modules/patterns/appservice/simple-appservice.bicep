@@ -39,6 +39,9 @@ param appServicePlanKind string
 param appServicePlanTier string
 
 // @description('The name from Service Endpoint Subnet.')
+// param appServiceEndpointVnetName string
+
+// @description('The name from Service Endpoint Subnet.')
 // param appServiceEndpointSubnetName string
 //*****************************************************************************************************
 
@@ -94,6 +97,7 @@ module appServiceModule '../../components/appservice/appservice.bicep' = {
     role: role
     appId: appId
     appname: appname
+    // appServiceEndpointVnetName: appServiceEndpointVnetName
     // appServiceEndpointSubnetName: appServiceEndpointSubnetName
     farmId: createNewAppServicePlan ? appServicePlanModule.outputs.farmId : existingappServicePlanId
     workspaceId: workspaceId

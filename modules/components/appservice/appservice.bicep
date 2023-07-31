@@ -39,6 +39,9 @@ param workspaceId string
 param pvtEndpointSubnetId string
 
 // @description('The name from Service Endpoint Subnet.')
+// param appServiceEndpointVnetName string
+
+// @description('The name from Service Endpoint Subnet.')
 // param appServiceEndpointSubnetName string
 //*****************************************************************************************************
 
@@ -51,9 +54,14 @@ var ftpsState = 'FtpsOnly'
 
 // Data Subnet to configure Service Endpoint
 //*****************************************************************************************************
-// resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing = {
+//resource vNet 'Microsoft.Network/virtualNetworks@2020-11-01' existing = {
+//  name: appServiceEndpointVnetName
+//}
+
+//resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing = {
 //   name : appServiceEndpointSubnetName
-// }
+//   parent: vNet
+//}
 //*****************************************************************************************************
 
 
