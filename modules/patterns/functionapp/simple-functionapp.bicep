@@ -65,7 +65,8 @@ param funcStorageAccessTier string
 
 // App Service Plan
 //*****************************************************************************************************
-module appServicePlanModule 'br/ACR-LAB:bicep/components/appserviceplan:v1.0.0' = {
+// module appServicePlanModule 'br/ACR-LAB:bicep/components/appserviceplan:v1.0.0' = {
+module appServicePlanModule '../../components/appserviceplan/appserviceplan.bicep' = {
   name: 'appServicePlanModule'
   params: {
     location: location
@@ -74,7 +75,7 @@ module appServicePlanModule 'br/ACR-LAB:bicep/components/appserviceplan:v1.0.0' 
     role: role
     appId: appId
     appname: appname
-    // appServicePlanName: appServicePlanName
+    appServicePrefix: 'funcsvcplan'
     appServicePlanSkuName: appServicePlanSkuName
     createNewAppServicePlan: createNewAppServicePlan
     workspaceId: workspaceId
@@ -86,7 +87,8 @@ module appServicePlanModule 'br/ACR-LAB:bicep/components/appserviceplan:v1.0.0' 
 
 // Storage Account for Function App
 //*****************************************************************************************************
-module functionStorageAccountModule 'br/ACR-LAB:bicep/components/storage-account:v1.0.0' = {
+// module functionStorageAccountModule 'br/ACR-LAB:bicep/components/storage-account:v1.0.0' = {
+module functionStorageAccountModule '../../components/storage-account/storage.bicep' = {
   name: 'funcStorageAccountModule'
   params: {
     location: location
@@ -106,7 +108,8 @@ module functionStorageAccountModule 'br/ACR-LAB:bicep/components/storage-account
 
 // Function App
 //*****************************************************************************************************
-module functionAppModule 'br/ACR-LAB:bicep/components/functionapp:v1.1.0' = {
+// module functionAppModule 'br/ACR-LAB:bicep/components/functionapp:v1.1.0' = {
+  module functionAppModule '../../components/functionapp/functionapp.bicep' = {
   name: 'functionAppModule'
   params: {
     // functionAppName: functionAppName

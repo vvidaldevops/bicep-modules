@@ -55,60 +55,11 @@ param farmId string
 
 param funcStorageAccountName string
 
-// @secure()
-// param funcStorageString object 
-//*****************************************************************************************************
 
 // Variables
 //*****************************************************************************************************
 // var storageKind = 'StorageV2'
 //*****************************************************************************************************
-
-/*
-// Storage Account for FunctionApp
-//*****************************************************************************************************
-resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
-  // name: funcStorageAccountName
-  name: toLower('funcstg${bu}${stage}${appname}${role}${appId}')
-  location: location
-  kind: storageKind
-  sku: {
-    name: funcStorageAccountTier
-  }
-  properties: {
-    // Testing to create Function App
-    allowBlobPublicAccess: true
-    accessTier: funcStorageAccessTier
-    allowCrossTenantReplication: false
-    allowSharedKeyAccess: true
-    encryption: {
-      keySource: 'Microsoft.Storage'
-      requireInfrastructureEncryption: true
-      services: {
-        blob: {
-          enabled: true
-        }
-        file: {
-          enabled: true
-        }
-      }
-    }    
-    minimumTlsVersion: 'TLS1_2'
-    networkAcls: {
-      bypass: 'AzureServices'
-      defaultAction: 'Deny'
-    }
-    supportsHttpsTrafficOnly: true 
-  }
-  tags: tags
-}
-
-// output storageAccountId string = funcStorageAccount.id
-// output storageAccountName string = funcStorageAccountName.name
-// https://github.com/Azure/bicep/issues/2163 // https://stackoverflow.com/questions/47985364/listkeys-for-azure-function-app/47985475#47985475
-//*****************************************************************************************************
-*/
-
 
 // Storage Account for FunctionApp
 //*****************************************************************************************************
@@ -171,7 +122,7 @@ resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-previe
     workspaceId: workspaceId
     metrics: [
       {
-        category: 'Transaction'
+        category: 'AllMetrics'
         enabled: true
         retentionPolicy: {
           days: 30

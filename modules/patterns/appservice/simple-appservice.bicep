@@ -52,7 +52,8 @@ param pvtEndpointSubnetId string
 
 // App Service Plan
 //*****************************************************************************************************
-module appServicePlanModule 'br/ACR-LAB:bicep/components/appserviceplan:v1.0.0' = {
+// module appServicePlanModule 'br/ACR-LAB:bicep/components/appserviceplan:v1.0.0' = {
+module appServicePlanModule '../../components/appserviceplan/appserviceplan.bicep' = {
   name: 'appServicePlanModule'
   params: {
     location: location
@@ -61,7 +62,7 @@ module appServicePlanModule 'br/ACR-LAB:bicep/components/appserviceplan:v1.0.0' 
     role: role
     appId: appId
     appname: appname
-    // appServicePlanName: appServicePlanName
+    appServicePrefix: 'appsvcplan'
     appServicePlanSkuName: appServicePlanSkuName
     createNewAppServicePlan: createNewAppServicePlan
     workspaceId: workspaceId
@@ -73,7 +74,8 @@ module appServicePlanModule 'br/ACR-LAB:bicep/components/appserviceplan:v1.0.0' 
 
 // App Service
 //*****************************************************************************************************
-module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1.0.0' = {
+// module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1.0.0' = {
+module appServiceModule '../../components/appservice/appservice.bicep' = {
   name: 'appServiceModule'
   params: {
     location: location

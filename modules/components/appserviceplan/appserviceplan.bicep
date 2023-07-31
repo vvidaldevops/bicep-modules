@@ -28,6 +28,8 @@ param tags object
 // @description('The name of the App Service plan.')
 // param appServicePlanName string
 
+param appServicePrefix string
+
 @description('The name of the App Service plan SKU.')
 param appServicePlanSkuName string
 
@@ -42,7 +44,7 @@ param createNewAppServicePlan bool
 // App Service Plan
 //*****************************************************************************************************
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = if (createNewAppServicePlan) {
-  name: toLower('appsvcplan-${bu}-${stage}-${appname}-${role}-${appId}')
+  name: toLower('${appServicePrefix}-${bu}-${stage}-${appname}-${role}-${appId}')
   location: location
   sku: {
     name: appServicePlanSkuName

@@ -41,8 +41,8 @@ param workspaceId string
 
 // Storage Account Module
 //*****************************************************************************************************
-module storageAccountModule 'br/ACR-LAB:bicep/components/storage-account:v1.0.0' = {
-// module storageAccountModule '../../../modules/components/storage-account/storage.bicep' = {
+// module storageAccountModule 'br/ACR-LAB:bicep/components/storage-account:v1.0.0' = {
+module storageAccountModule '../../../modules/components/storage-account/storage.bicep' = {
   name: 'storageAccountModule'
   params: {
     bu: bu
