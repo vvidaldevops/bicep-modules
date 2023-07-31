@@ -22,12 +22,8 @@ param appname string
 param tags object
 //*****************************************************************************************************
 
-
-// Parameters
+// Function App Parameters
 //*****************************************************************************************************
-// @description('The name of the function app that you wish to create.')
-// param functionAppName string
-
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 

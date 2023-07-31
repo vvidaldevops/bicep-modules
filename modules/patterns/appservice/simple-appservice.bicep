@@ -22,31 +22,31 @@ param appname string
 param tags object
 //*****************************************************************************************************
 
-
-// Parameters
+// App Service Plan Parameters
 //*****************************************************************************************************
-// @description('The name of the App Service plan.')
-// param appServicePlanName string
+@allowed([
+  'new'
+  'existing'
+])
+param newOrExistingAppServicePlan string
+
+@description('The name of the App Service plan (When existing was selected.')
+param existingAppServicePlanName string
 
 @description('The name of the App Service plan SKU.')
 param appServicePlanSkuName string
 
-// @description('The name of the App Service.')
-// param appServiceAppName string
-
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 
-@description('Indicates whether AppServicePlan should be created or using an existing one.')
-param createNewAppServicePlan bool
+// @description('Indicates whether AppServicePlan should be created or using an existing one.')
+// param createNewAppServicePlan bool
 
-@description('If the above option is = true, the existing App Service Plan ID should be provided.')
-param appServicePlanId string
+// @description('If the above option is = true, the existing App Service Plan ID should be provided.')
+// param appServicePlanId string
 
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
-
-
 //*****************************************************************************************************
 
 
@@ -64,7 +64,9 @@ module appServicePlanModule '../../components/appserviceplan/appserviceplan.bice
     appname: appname
     appServicePrefix: 'appsvcplan'
     appServicePlanSkuName: appServicePlanSkuName
-    createNewAppServicePlan: createNewAppServicePlan
+    // createNewAppServicePlan: createNewAppServicePlan
+    newOrExistingAppServicePlan: newOrExistingAppServicePlan
+    existingAppServicePlanName: existingAppServicePlanName
     workspaceId: workspaceId
     tags: tags
   }
@@ -84,8 +86,8 @@ module appServiceModule '../../components/appservice/appservice.bicep' = {
     role: role
     appId: appId
     appname: appname
-    // appServiceAppName: appServiceAppName
-    farmId: createNewAppServicePlan ? appServicePlanModule.outputs.farmId : appServicePlanId
+    // farmId: createNewAppServicePlan ? appServicePlanModule.outputs.farmId : appServicePlanId
+    farmId: appServicePlanModule.outputs.farmId
     workspaceId: workspaceId
     pvtEndpointSubnetId: pvtEndpointSubnetId
     tags: tags

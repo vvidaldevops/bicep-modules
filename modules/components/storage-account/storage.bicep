@@ -22,19 +22,35 @@ param appname string
 param tags object
 //*****************************************************************************************************
 
-// Parameters
+// Storage Parameters
 //*****************************************************************************************************
-// @description('The Name from Storage Account')
-// param storageAccountName string
+@description('Storage account prefix')
+@maxLength(3)
+param storagePrefix string
 
 @description('The Storage Account tier')
 param accountTier string
 
-@description('The Storage Account tier')
+@description('The Storage Access tier')
 param accessTier string
 
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
+//*****************************************************************************************************
+
+// Storage Variables
+//*****************************************************************************************************
+@description('Storage Kind')
+var storageKind = 'StorageV2'
+
+@description('Allow or Deny the storage public access. Default is false')
+var allowBlobPublicAccess = false   
+
+@description('Minimum TLS Vesion')
+var minimumTlsVersion = 'TLS1_2'
+
+@description('HTTP Only?')
+var HttpsTrafficOnly = true
 //*****************************************************************************************************
 
 
@@ -42,14 +58,14 @@ param workspaceId string
 //*****************************************************************************************************
 resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
   // name: storageAccountName
-  name: toLower('stg${bu}${stage}${appname}${role}${appId}')
+  name: toLower('${storagePrefix}${bu}${stage}${appname}${role}${appId}')
   location: location
-  kind: 'StorageV2'
+  kind: storageKind
   sku: {
     name: accountTier
   }
   properties: {
-    allowBlobPublicAccess: false
+    allowBlobPublicAccess: allowBlobPublicAccess
     accessTier: accessTier
     allowCrossTenantReplication: false
     allowSharedKeyAccess: true
@@ -65,22 +81,17 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
         }
       }
     }    
-    minimumTlsVersion: 'TLS1_2'
+    minimumTlsVersion: minimumTlsVersion
     networkAcls: {
       bypass: 'AzureServices'
       defaultAction: 'Deny'
     }
-    supportsHttpsTrafficOnly: true 
+    supportsHttpsTrafficOnly: HttpsTrafficOnly 
   }
   tags: tags
 }
 output storageAccountId string = storageAccount.id
 output storageAccountName string = storageAccount.name
-// output storageObjectReference object = reference('storageAccount')
-
-//output primaryKey string = storageAccount.listKeys().keys[0].value 
-
-// https://github.com/Azure/bicep/issues/2163 // https://stackoverflow.com/questions/47985364/listkeys-for-azure-function-app/47985475#47985475
 //*****************************************************************************************************
 
 

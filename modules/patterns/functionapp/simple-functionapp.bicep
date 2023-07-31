@@ -22,23 +22,31 @@ param appname string
 param tags object
 //*****************************************************************************************************
 
-
-// Parameters
+// App Service Plan Parameters
 //*****************************************************************************************************
-// @description('The name of the App Service plan.')
-// param appServicePlanName string
+@allowed([
+  'new'
+  'existing'
+])
+param newOrExistingFuncAppServicePlan string
+
+@description('The name of the App Service plan (When existing was selected.')
+param existingfuncAppServicePlanName string
 
 @description('The name of the App Service plan SKU.')
 param appServicePlanSkuName string
 
+// @description('Indicates whether AppServicePlan should be created or using an existing one.')
+// param createNewAppServicePlan bool
+
+// @description('If the above option is = true, the existing App Service Plan ID should be provided.')
+// param appServicePlanId string
+
+// App Service Plan Parameters
+//*****************************************************************************************************
+
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
-
-@description('Indicates whether AppServicePlan should be created or using an existing one.')
-param createNewAppServicePlan bool
-
-@description('If the above option is = true, the existing App Service Plan ID should be provided.')
-param appServicePlanId string
 
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
@@ -52,14 +60,18 @@ param pvtEndpointSubnetId string
 param functionWorkerRuntime string
 
 // Storage Account Parameters
-// @description('The Name from Storage Account')
-// param storageAccountName string
-
-@description('The Storage Account tier')
+@description('Storage Account type')
+@allowed([
+  'Standard_LRS'
+  'Standard_ZRS'
+  'Standard_GRS'
+  'Standard_GZRS'
+  'Standard_RAGRS'
+  'Standard_RAGZRS'
+  'Premium_LRS'
+  'Premium_ZRS'
+])
 param funcStorageAccountTier string
-
-@description('The Storage Account tier')
-param funcStorageAccessTier string
 //*****************************************************************************************************
 
 
@@ -75,9 +87,11 @@ module appServicePlanModule '../../components/appserviceplan/appserviceplan.bice
     role: role
     appId: appId
     appname: appname
+    newOrExistingAppServicePlan: newOrExistingFuncAppServicePlan
+    existingAppServicePlanName: existingfuncAppServicePlanName
     appServicePrefix: 'funcsvcplan'
     appServicePlanSkuName: appServicePlanSkuName
-    createNewAppServicePlan: createNewAppServicePlan
+    // createNewAppServicePlan: createNewAppServicePlan
     workspaceId: workspaceId
     tags: tags
   }
@@ -97,8 +111,9 @@ module functionStorageAccountModule '../../components/storage-account/storage.bi
     role: role
     appId: appId
     appname: appname
+    storagePrefix: 'fcn'
     accountTier: funcStorageAccountTier
-    accessTier: funcStorageAccessTier
+    accessTier: 'Hot'
     workspaceId: workspaceId
     tags: tags
   }
@@ -120,7 +135,8 @@ module functionStorageAccountModule '../../components/storage-account/storage.bi
     role: role
     appId: appId
     appname: appname    
-    farmId: createNewAppServicePlan ? appServicePlanModule.outputs.farmId : appServicePlanId
+    // farmId: createNewAppServicePlan ? appServicePlanModule.outputs.farmId : appServicePlanId
+    farmId: appServicePlanModule.outputs.farmId
     functionWorkerRuntime: functionWorkerRuntime
     funcStorageAccountName: functionStorageAccountModule.outputs.storageAccountName
     workspaceId: workspaceId
@@ -129,4 +145,3 @@ module functionStorageAccountModule '../../components/storage-account/storage.bi
   }
 }
 //*****************************************************************************************************
-

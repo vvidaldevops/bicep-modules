@@ -25,11 +25,18 @@ param tags object
 
 // Parameters
 //*****************************************************************************************************
-// @description('The Name from Storage Account')
-// param storageAccountName string
-
-@description('The Storage Account tier')
-param accountTier string
+@description('Storage Account type')
+@allowed([
+  'Standard_LRS'
+  'Standard_ZRS'
+  'Standard_GRS'
+  'Standard_GZRS'
+  'Standard_RAGRS'
+  'Standard_RAGZRS'
+  'Premium_LRS'
+  'Premium_ZRS'
+])
+param accountTier string = 'Standard_LRS'
 
 @description('The Storage Account tier')
 param accessTier string
@@ -50,7 +57,7 @@ module storageAccountModule '../../../modules/components/storage-account/storage
     role: role
     appId: appId
     appname: appname
-    // storageAccountName: storageAccountName
+    storagePrefix: 'stg'
     location: location
     accountTier: accountTier
     accessTier: accessTier
