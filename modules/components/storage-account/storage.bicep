@@ -39,11 +39,14 @@ param accountTier string
 @description('The Storage Access tier')
 param accessTier string
 
-// @description('The name from Service Endpoint Subnet.')
-// param serviceEndpointSubnetName string
+@description('The name from Service Endpoint VNET.')
+param serviceEndpointVnetName string
+
+@description('The name from Service Endpoint Subnet.')
+param serviceEndpointSubnetName string
 
 @description('Allow or Deny the storage public access. Default is false')
-param allowBlobPublicAccess bool = false
+param allowBlobPublicAccess string = 'Deny'
 
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
@@ -63,9 +66,14 @@ var HttpsTrafficOnly = true
 
 // Data Subnet to configure Service Endpoint
 //*****************************************************************************************************
-// resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing = {
-//   name : serviceEndpointSubnetName
-// }
+resource vNet 'Microsoft.Network/virtualNetworks@2020-11-01' existing = {
+  name: serviceEndpointVnetName
+}
+
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing = {
+   name: serviceEndpointSubnetName
+   parent: vNet
+}
 //*****************************************************************************************************
 
 
@@ -80,7 +88,17 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
     name: accountTier
   }
   properties: {
-    allowBlobPublicAccess: allowBlobPublicAccess
+    networkAcls: {
+      defaultAction: allowBlobPublicAccess
+      bypass: 'AzureServices'
+      virtualNetworkRules: [
+        {
+          action: 'Allow'
+          id: subnet.id
+        }
+      ]
+       
+    }
     accessTier: accessTier
     allowCrossTenantReplication: false
     allowSharedKeyAccess: true
@@ -97,18 +115,6 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
       }
     }    
     minimumTlsVersion: minimumTlsVersion
-    /*
-    networkAcls: {
-      bypass: 'AzureServices'
-      defaultAction: 'Deny'
-        virtualNetworkRules: [
-        {
-          id: subnet.id
-          action: 'Allow'
-        }
-      ]  
-    }
-    */
     supportsHttpsTrafficOnly: HttpsTrafficOnly 
   }
   tags: tags

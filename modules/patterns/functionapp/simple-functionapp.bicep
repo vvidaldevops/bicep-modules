@@ -48,8 +48,11 @@ param workspaceId string
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
 
-// @description('The name from Service Endpoint Subnet.')
-// param funcServiceEndpointSubnetName string
+@description('The name from Service Endpoint VNET.')
+param funcServiceEndpointvNetName string
+
+@description('The name from Service Endpoint Subnet.')
+param funcServiceEndpointSubnetName string
 
 @description('The language worker runtime to load in the function app.')
 @allowed([
@@ -60,7 +63,7 @@ param pvtEndpointSubnetId string
 param functionWorkerRuntime string
 //*****************************************************************************************************
 
-// Storage Account Parameters
+// Storage Account for Function App Parameters
 //*****************************************************************************************************
 @description('Storage Account type')
 @allowed([
@@ -111,7 +114,8 @@ module functionStorageAccountModule '../../components/storage-account/storage.bi
     role: role
     appId: appId
     appname: appname
-    // serviceEndpointSubnetName: funcServiceEndpointSubnetName
+    serviceEndpointVnetName: funcServiceEndpointvNetName
+    serviceEndpointSubnetName: funcServiceEndpointSubnetName
     storagePrefix: 'fcn'
     accountTier: funcStorageAccountTier
     accessTier: 'Hot'
@@ -134,7 +138,7 @@ module functionStorageAccountModule '../../components/storage-account/storage.bi
     role: role
     appId: appId
     appname: appname
-    // serviceEndpointSubnetName: funcServiceEndpointSubnetName
+    serviceEndpointSubnetName: funcServiceEndpointSubnetName
     farmId: createNewFcnServicePlan ? appServicePlanModule.outputs.farmId : existingFcnServicePlanId
     functionWorkerRuntime: functionWorkerRuntime
     funcStorageAccountName: functionStorageAccountModule.outputs.storageAccountName

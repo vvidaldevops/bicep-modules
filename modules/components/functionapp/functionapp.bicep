@@ -35,8 +35,8 @@ param workspaceId string
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
 
-// @description('The name from Service Endpoint Subnet.')
-// param serviceEndpointSubnetName string
+@description('The name from Service Endpoint Subnet.')
+param serviceEndpointSubnetName string
 
 @description('The language worker runtime to load in the function app.')
 @allowed([
@@ -62,9 +62,9 @@ var ftpsState = 'FtpsOnly'
 
 // Data Subnet to configure Service Endpoint
 //*****************************************************************************************************
-// resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing = {
-//   name : serviceEndpointSubnetName
-// }
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing = {
+   name : serviceEndpointSubnetName
+}
 //*****************************************************************************************************
 
 // Storage Account for FunctionApp Resource
@@ -83,7 +83,7 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
   kind: 'functionapp'
   properties: {
     publicNetworkAccess: publicNetworkAccess
-    // virtualNetworkSubnetId: subnet.id
+    virtualNetworkSubnetId: subnet.id
     serverFarmId: farmId
     siteConfig: {
       appSettings: [
@@ -144,7 +144,7 @@ resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-previe
 //*****************************************************************************************************
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   // name: 'insights-${functionApp.name}'
-  name: 'insights-function-check'
+  name: 'insights-functionapp'
   location: location
   kind: 'web'
   properties: {
