@@ -41,17 +41,16 @@ param existingFcnServicePlanId string
 
 // Function App Parameters
 //*****************************************************************************************************
-
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
 
-@description('The name from Service Endpoint VNET.')
-param funcServiceEndpointvNetName string
+@description('The name from Function Service Endpoint VNET.')
+param funcServiceEndpointVnetName string
 
-@description('The name from Service Endpoint Subnet.')
+@description('The name from Function Service Endpoint Subnet.')
 param funcServiceEndpointSubnetName string
 
 @description('The language worker runtime to load in the function app.')
@@ -77,6 +76,12 @@ param functionWorkerRuntime string
   'Premium_ZRS'
 ])
 param funcStorageAccountTier string
+
+@description('The name from Function Storage Service Endpoint VNET.')
+param funcStgServiceEndpointvNetName string
+
+@description('The name from Function Storage Service Endpoint Subnet.')
+param funcStgServiceEndpointSubnetName string
 //*****************************************************************************************************
 
 
@@ -114,8 +119,8 @@ module functionStorageAccountModule '../../components/storage-account/storage.bi
     role: role
     appId: appId
     appname: appname
-    serviceEndpointVnetName: funcServiceEndpointvNetName
-    serviceEndpointSubnetName: funcServiceEndpointSubnetName
+    serviceEndpointVnetName: funcStgServiceEndpointvNetName
+    serviceEndpointSubnetName: funcStgServiceEndpointSubnetName
     storagePrefix: 'fcn'
     accountTier: funcStorageAccountTier
     accessTier: 'Hot'
@@ -138,6 +143,7 @@ module functionStorageAccountModule '../../components/storage-account/storage.bi
     role: role
     appId: appId
     appname: appname
+    serviceEndpointVnetName: funcServiceEndpointVnetName
     serviceEndpointSubnetName: funcServiceEndpointSubnetName
     farmId: createNewFcnServicePlan ? appServicePlanModule.outputs.farmId : existingFcnServicePlanId
     functionWorkerRuntime: functionWorkerRuntime

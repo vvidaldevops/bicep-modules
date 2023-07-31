@@ -35,6 +35,9 @@ param workspaceId string
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
 
+@description('The name from Service Endpoint VNET.')
+param serviceEndpointVnetName string
+
 @description('The name from Service Endpoint Subnet.')
 param serviceEndpointSubnetName string
 
@@ -62,8 +65,13 @@ var ftpsState = 'FtpsOnly'
 
 // Data Subnet to configure Service Endpoint
 //*****************************************************************************************************
+resource vNet 'Microsoft.Network/virtualNetworks@2020-11-01' existing = {
+  name: serviceEndpointVnetName
+}
+
 resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing = {
    name : serviceEndpointSubnetName
+   parent: vNet
 }
 //*****************************************************************************************************
 
