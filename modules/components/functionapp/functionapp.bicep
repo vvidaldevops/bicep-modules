@@ -35,6 +35,9 @@ param workspaceId string
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
 
+@description('The name from Service Endpoint Subnet.')
+param serviceEndpointSubnetName string
+
 @description('The language worker runtime to load in the function app.')
 @allowed([
   'node'
@@ -46,13 +49,23 @@ param functionWorkerRuntime string
 @description('ID from existing App Service Plan')
 param farmId string
 
-
 @description('The storage account name for Function App')
 param funcStorageAccountName string
-
-// Variables
 //*****************************************************************************************************
 
+// Function App Variables
+//*****************************************************************************************************
+var httpsOnly = true
+var publicNetworkAccess = 'Disabled'
+var ftpsState = 'FtpsOnly'
+//*****************************************************************************************************
+
+// Data Subnet to configure Service Endpoint
+//*****************************************************************************************************
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing = {
+  name : serviceEndpointSubnetName
+}
+//*****************************************************************************************************
 
 // Storage Account for FunctionApp Resource
 //*****************************************************************************************************
@@ -69,6 +82,8 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
   location: location
   kind: 'functionapp'
   properties: {
+    publicNetworkAccess: publicNetworkAccess
+    virtualNetworkSubnetId: subnet.id
     serverFarmId: farmId
     siteConfig: {
       appSettings: [
@@ -93,10 +108,10 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
           value: '~4'
         }
       ]
-      ftpsState: 'FtpsOnly'
+      ftpsState: ftpsState
       minTlsVersion: '1.2'
     }
-    httpsOnly: true
+    httpsOnly: httpsOnly
   }
   tags: tags
 }

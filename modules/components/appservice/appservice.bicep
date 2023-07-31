@@ -37,11 +37,23 @@ param workspaceId string
 
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
+
+@description('The name from Service Endpoint Subnet.')
+param appServiceEndpointSubnetName string
 //*****************************************************************************************************
 
 // App Service Variables
 //*****************************************************************************************************
 var httpsOnly = true
+var publicNetworkAccess = 'Disabled'
+var ftpsState = 'FtpsOnly'
+//*****************************************************************************************************
+
+// Data Subnet to configure Service Endpoint
+//*****************************************************************************************************
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing = {
+  name : appServiceEndpointSubnetName
+}
 //*****************************************************************************************************
 
 
@@ -52,6 +64,8 @@ resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
   location: location
   kind: 'app'
   properties: {
+    publicNetworkAccess: publicNetworkAccess
+    virtualNetworkSubnetId: subnet.id
     serverFarmId: farmId
     httpsOnly: httpsOnly
     siteConfig: {
@@ -65,6 +79,7 @@ resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
           value: applicationInsights.properties.ConnectionString
         }
       ]
+      ftpsState: ftpsState
     }
   }
   tags: tags
@@ -77,7 +92,7 @@ output appServiceAppHostName string = appServiceApp.properties.defaultHostName
 // Private Endpoint Resource
 //*****************************************************************************************************
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-02-01' = if (!empty(pvtEndpointSubnetId)) {
-  name: 'pvtEndpoint-${appServiceApp.name}'
+  name: 'pvtendpoint-${appServiceApp.name}'
   location: location
   properties: {
     subnet: {
@@ -85,7 +100,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-02-01' = if (!
     }
     privateLinkServiceConnections: [
       {
-        name: 'pvtLink-${appServiceApp.name}'
+        name: 'pvtlink-${appServiceApp.name}'
         properties:{
           privateLinkServiceId: appServiceApp.id
           groupIds:[

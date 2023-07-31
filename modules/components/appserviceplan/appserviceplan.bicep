@@ -28,19 +28,19 @@ param tags object
 //*****************************************************************************************************
 
 
-// Parameters
+// App Service Plan Parameters
 //*****************************************************************************************************
 @description('The prefix of AppService')
 param appServicePrefix string
 
 @description('The name of the App Service plan SKU.')
-param appServicePlanSkuName string = 'B1'
+param appServicePlanSkuName string = 'S1'
 
 @description('The kind of the App Service plan.')
 param appServicePlanKind string = 'windows'
 
 @description('The tier of the App Service plan.')
-param appServicePlanTier string = 'Basic'
+param appServicePlanTier string = 'Standard'
 
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string

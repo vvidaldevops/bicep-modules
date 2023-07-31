@@ -39,6 +39,9 @@ param accountTier string
 @description('The Storage Access tier')
 param accessTier string
 
+@description('The name from Service Endpoint Subnet.')
+param serviceEndpointSubnetName string
+
 @description('Allow or Deny the storage public access. Default is false')
 param allowBlobPublicAccess bool = false
 
@@ -56,6 +59,13 @@ var minimumTlsVersion = 'TLS1_2'
 
 @description('HTTP Only?')
 var HttpsTrafficOnly = true
+//*****************************************************************************************************
+
+// Data Subnet to configure Service Endpoint
+//*****************************************************************************************************
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing = {
+  name : serviceEndpointSubnetName
+}
 //*****************************************************************************************************
 
 
@@ -90,6 +100,12 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
     networkAcls: {
       bypass: 'AzureServices'
       defaultAction: 'Deny'
+      virtualNetworkRules: [
+        {
+          id: subnet.id
+          action: 'Allow'
+        }
+      ]  
     }
     supportsHttpsTrafficOnly: HttpsTrafficOnly 
   }

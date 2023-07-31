@@ -48,6 +48,9 @@ param accessTier string
 @description('Allow or Deny the storage public access. Default is false')
 param allowBlobPublicAccess bool = false
 
+@description('The name from Service Endpoint Subnet.')
+param stgServiceEndpointSubnetName string
+
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 //*****************************************************************************************************
@@ -68,6 +71,7 @@ module storageAccountModule '../../../modules/components/storage-account/storage
     location: location
     accountTier: accountTier
     accessTier: accessTier
+    serviceEndpointSubnetName: stgServiceEndpointSubnetName
     allowBlobPublicAccess: allowBlobPublicAccess
     workspaceId: workspaceId
     tags: tags

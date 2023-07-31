@@ -39,7 +39,7 @@ param createNewFcnServicePlan bool
 param existingFcnServicePlanId string
 //*****************************************************************************************************
 
-// App Service Plan Parameters
+// Function App Parameters
 //*****************************************************************************************************
 
 @description('The ID of Log Analytics Workspace.')
@@ -47,6 +47,9 @@ param workspaceId string
 
 @description('The ID from Private Endpoint Subnet.')
 param pvtEndpointSubnetId string
+
+@description('The name from Service Endpoint Subnet.')
+param funcServiceEndpointSubnetName string
 
 @description('The language worker runtime to load in the function app.')
 @allowed([
@@ -108,6 +111,7 @@ module functionStorageAccountModule '../../components/storage-account/storage.bi
     role: role
     appId: appId
     appname: appname
+    serviceEndpointSubnetName: funcServiceEndpointSubnetName
     storagePrefix: 'fcn'
     accountTier: funcStorageAccountTier
     accessTier: 'Hot'
@@ -129,7 +133,8 @@ module functionStorageAccountModule '../../components/storage-account/storage.bi
     stage: stage
     role: role
     appId: appId
-    appname: appname    
+    appname: appname
+    serviceEndpointSubnetName: funcServiceEndpointSubnetName
     farmId: createNewFcnServicePlan ? appServicePlanModule.outputs.farmId : existingFcnServicePlanId
     functionWorkerRuntime: functionWorkerRuntime
     funcStorageAccountName: functionStorageAccountModule.outputs.storageAccountName
