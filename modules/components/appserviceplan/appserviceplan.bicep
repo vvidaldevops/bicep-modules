@@ -30,7 +30,7 @@ param tags object
 
 // Parameters
 //*****************************************************************************************************
-// @description('Indicates whether a new App Service Plan should be created or using an existing one.')
+@description('Indicates whether a new App Service Plan should be created or using an existing one.')
 @allowed([
   'new'
   'existing'
@@ -40,10 +40,11 @@ param newOrExistingAppServicePlan string
 @description('The name of the App Service plan (When existing was selected.')
 param existingAppServicePlanName string
 
+@description('The prefix of AppService')
 param appServicePrefix string
 
 @description('The name of the App Service plan SKU.')
-param appServicePlanSkuName string
+param appServicePlanSkuName string = 'B1'
 
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
@@ -51,6 +52,13 @@ param workspaceId string
 // @description('Indicates whether AppServicePlan should be created or using an existing one.')
 // param createNewAppServicePlan bool
 
+// @allowed([
+//  'High Performance Level'
+//  'Low Performance Level - High Sentive Information'
+//  'Low Performance Level - Low Sentive Information Front-End'
+//  'Low Performance Level - Low Sentive Information Back-End'
+// ])
+// param performanceLevel string
 
 //*****************************************************************************************************
 
