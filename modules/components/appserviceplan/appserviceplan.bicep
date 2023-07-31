@@ -30,16 +30,6 @@ param tags object
 
 // Parameters
 //*****************************************************************************************************
-@description('Indicates whether a new App Service Plan should be created or using an existing one.')
-@allowed([
-  'new'
-  'existing'
-])
-param newOrExistingAppServicePlan string
-
-@description('The name of the App Service plan (When existing was selected.')
-param existingAppServicePlanName string
-
 @description('The prefix of AppService')
 param appServicePrefix string
 
@@ -49,8 +39,8 @@ param appServicePlanSkuName string = 'B1'
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 
-// @description('Indicates whether AppServicePlan should be created or using an existing one.')
-// param createNewAppServicePlan bool
+@description('Indicates whether AppServicePlan should be created or using an existing one.')
+param createNewAppServicePlan bool
 
 // @allowed([
 //  'High Performance Level'
@@ -65,8 +55,7 @@ param workspaceId string
 
 // App Service Plan Resource 
 //*****************************************************************************************************
-// resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = if (createNewAppServicePlan) {
-resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = if (newOrExistingAppServicePlan == 'new') {
+resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = if (createNewAppServicePlan) {
   name: toLower('${appServicePrefix}-${bu}-${stage}-${appname}-${role}-${appId}')
   location: location
   sku: {
@@ -75,15 +64,8 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = if (newOrExisti
   tags: tags
 }
 
-resource appServicePlanExisting 'Microsoft.Web/serverfarms@2022-03-01' existing = if (newOrExistingAppServicePlan == 'existing') {
-  name: existingAppServicePlanName
-}
-
-// @description('Output the farm id')
-// output farmId string = appServicePlan.id
-
-output farmId string = ((appServicePlanExisting == 'new') ? appServicePlan.id : appServicePlanExisting.id)
-
+@description('Output the farm id')
+output farmId string = appServicePlan.id
 //*****************************************************************************************************
 
 

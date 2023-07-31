@@ -29,23 +29,14 @@ param tags object
 
 // App Service Plan Parameters
 //*****************************************************************************************************
-@allowed([
-  'new'
-  'existing'
-])
-param newOrExistingFuncAppServicePlan string
-
-@description('The name of the App Service plan (When existing was selected.')
-param existingfuncAppServicePlanName string
-
 @description('The name of the App Service plan SKU.')
 param appServicePlanSkuName string
 
-// @description('Indicates whether AppServicePlan should be created or using an existing one.')
-// param createNewAppServicePlan bool
+@description('Indicates whether AppServicePlan should be created or using an existing one.')
+param createNewFcnServicePlan bool
 
-// @description('If the above option is = true, the existing App Service Plan ID should be provided.')
-// param appServicePlanId string
+@description('If the above option is = true, the existing App Service Plan ID should be provided.')
+param existingFcnServicePlanId string
 //*****************************************************************************************************
 
 // App Service Plan Parameters
@@ -95,11 +86,9 @@ module appServicePlanModule '../../components/appserviceplan/appserviceplan.bice
     role: role
     appId: appId
     appname: appname
-    newOrExistingAppServicePlan: newOrExistingFuncAppServicePlan
-    existingAppServicePlanName: existingfuncAppServicePlanName
     appServicePrefix: 'funcsvcplan'
     appServicePlanSkuName: appServicePlanSkuName
-    // createNewAppServicePlan: createNewAppServicePlan
+    createNewAppServicePlan: createNewFcnServicePlan
     workspaceId: workspaceId
     tags: tags
   }
@@ -135,16 +124,13 @@ module functionStorageAccountModule '../../components/storage-account/storage.bi
   module functionAppModule '../../components/functionapp/functionapp.bicep' = {
   name: 'functionAppModule'
   params: {
-    // functionAppName: functionAppName
-    // storageAccountName: storageAccountName
     location: location
     bu: bu
     stage: stage
     role: role
     appId: appId
     appname: appname    
-    // farmId: createNewAppServicePlan ? appServicePlanModule.outputs.farmId : appServicePlanId
-    farmId: appServicePlanModule.outputs.farmId
+    farmId: createNewFcnServicePlan ? appServicePlanModule.outputs.farmId : existingFcnServicePlanId
     functionWorkerRuntime: functionWorkerRuntime
     funcStorageAccountName: functionStorageAccountModule.outputs.storageAccountName
     workspaceId: workspaceId
