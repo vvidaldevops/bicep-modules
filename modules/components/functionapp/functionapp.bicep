@@ -3,18 +3,23 @@
 @description('The Azure region into which the resources should be deployed.')
 param location string = resourceGroup().location
 
+@description('The business unit owning the resources.')
 @allowed([ 'set', 'setf', 'jmf', 'jmfe' ])
 param bu string
 
+@description('The deployment stage where the resources.')
 @allowed([ 'poc', 'dev', 'qa', 'uat', 'prd' ])
 param stage string
 
+@description('The role of the resource. Six (6) characters maximum')
 @maxLength(6)
 param role string
 
+@description('A unique identifier for an environment. Two (2) characters maximum')
 @maxLength(2)
 param appId string
 
+@description('The application name. Six (6) characters maximum')
 @maxLength(6)
 param appname string
 
@@ -41,23 +46,16 @@ param functionWorkerRuntime string
 @description('ID from existing App Service Plan')
 param farmId string
 
-// var functionWorkerRuntime = runtime
 
-// @description('The Storage Account tier')
-// param funcStorageAccountTier string
-
-// @description('The Storage Account tier')
-// param funcStorageAccessTier string
-
+@description('The storage account name for Function App')
 param funcStorageAccountName string
-
 
 // Variables
 //*****************************************************************************************************
-// var storageKind = 'StorageV2'
 //*****************************************************************************************************
 
-// Storage Account for FunctionApp
+
+// Storage Account for FunctionApp Resource
 //*****************************************************************************************************
 resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
   name: funcStorageAccountName
@@ -65,15 +63,12 @@ resource funcStorageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' exist
 //*****************************************************************************************************
 
 
-// Function App
+// Function App Resource
 //*****************************************************************************************************
 resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
   name: toLower('funcapp-${bu}-${stage}-${appname}-${role}-${appId}')
   location: location
   kind: 'functionapp'
-  // identity: {
-  //  type: 'SystemAssigned'
-  // }
   properties: {
     serverFarmId: farmId
     siteConfig: {
@@ -109,7 +104,7 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
 //*****************************************************************************************************
 
 
-// Diagnostic Settings
+// Diagnostic Settings Resource
 //*****************************************************************************************************
 resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: 'diag-${functionApp.name}'
@@ -131,7 +126,7 @@ resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-previe
 //*****************************************************************************************************
 
 
-// Application Insights
+// Application Insights Resource
 //*****************************************************************************************************
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   // name: 'insights-${functionApp.name}'
@@ -146,7 +141,7 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
 //*****************************************************************************************************
 
 
-// Private Endpoint
+// Private Endpoint Resource
 //*****************************************************************************************************
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-02-01' = if (!empty(pvtEndpointSubnetId)) {
   name: '${functionApp.name}-PvtEndpoint'

@@ -3,18 +3,23 @@
 @description('The Azure region into which the resources should be deployed.')
 param location string
 
+@description('The business unit owning the resources.')
 @allowed([ 'set', 'setf', 'jmf', 'jmfe' ])
 param bu string
 
+@description('The deployment stage where the resources.')
 @allowed([ 'poc', 'dev', 'qa', 'uat', 'prd' ])
 param stage string
 
+@description('The role of the resource. Six (6) characters maximum')
 @maxLength(6)
 param role string
 
+@description('A unique identifier for an environment. Two (2) characters maximum')
 @maxLength(2)
 param appId string
 
+@description('The application name. Six (6) characters maximum')
 @maxLength(6)
 param appname string
 
@@ -35,7 +40,10 @@ param existingAppServicePlanName string
 
 @description('The name of the App Service plan SKU.')
 param appServicePlanSkuName string
+//*****************************************************************************************************
 
+// App Service Parameters
+//*****************************************************************************************************
 @description('The ID of Log Analytics Workspace.')
 param workspaceId string
 
@@ -50,7 +58,7 @@ param pvtEndpointSubnetId string
 //*****************************************************************************************************
 
 
-// App Service Plan
+// App Service Plan Module
 //*****************************************************************************************************
 // module appServicePlanModule 'br/ACR-LAB:bicep/components/appserviceplan:v1.0.0' = {
 module appServicePlanModule '../../components/appserviceplan/appserviceplan.bicep' = {
@@ -74,7 +82,7 @@ module appServicePlanModule '../../components/appserviceplan/appserviceplan.bice
 //*****************************************************************************************************
 
 
-// App Service
+// App Service Module
 //*****************************************************************************************************
 // module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1.0.0' = {
 module appServiceModule '../../components/appservice/appservice.bicep' = {

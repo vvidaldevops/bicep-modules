@@ -3,18 +3,23 @@
 @description('The Azure region into which the resources should be deployed.')
 param location string
 
+@description('The business unit owning the resources.')
 @allowed([ 'set', 'setf', 'jmf', 'jmfe' ])
 param bu string
 
+@description('The deployment stage where the resources.')
 @allowed([ 'poc', 'dev', 'qa', 'uat', 'prd' ])
 param stage string
 
+@description('The role of the resource. Six (6) characters maximum')
 @maxLength(6)
 param role string
 
+@description('A unique identifier for an environment. Two (2) characters maximum')
 @maxLength(2)
 param appId string
 
+@description('The application name. Six (6) characters maximum')
 @maxLength(6)
 param appname string
 
@@ -41,6 +46,7 @@ param appServicePlanSkuName string
 
 // @description('If the above option is = true, the existing App Service Plan ID should be provided.')
 // param appServicePlanId string
+//*****************************************************************************************************
 
 // App Service Plan Parameters
 //*****************************************************************************************************
@@ -58,8 +64,10 @@ param pvtEndpointSubnetId string
   'java'
 ])
 param functionWorkerRuntime string
+//*****************************************************************************************************
 
 // Storage Account Parameters
+//*****************************************************************************************************
 @description('Storage Account type')
 @allowed([
   'Standard_LRS'
@@ -75,7 +83,7 @@ param funcStorageAccountTier string
 //*****************************************************************************************************
 
 
-// App Service Plan
+// App Service Plan Module
 //*****************************************************************************************************
 // module appServicePlanModule 'br/ACR-LAB:bicep/components/appserviceplan:v1.0.0' = {
 module appServicePlanModule '../../components/appserviceplan/appserviceplan.bicep' = {
@@ -99,7 +107,7 @@ module appServicePlanModule '../../components/appserviceplan/appserviceplan.bice
 //*****************************************************************************************************
 
 
-// Storage Account for Function App
+// Storage Account for Function App Module
 //*****************************************************************************************************
 // module functionStorageAccountModule 'br/ACR-LAB:bicep/components/storage-account:v1.0.0' = {
 module functionStorageAccountModule '../../components/storage-account/storage.bicep' = {
@@ -121,7 +129,7 @@ module functionStorageAccountModule '../../components/storage-account/storage.bi
 //*****************************************************************************************************
 
 
-// Function App
+// Function App Module
 //*****************************************************************************************************
 // module functionAppModule 'br/ACR-LAB:bicep/components/functionapp:v1.1.0' = {
   module functionAppModule '../../components/functionapp/functionapp.bicep' = {

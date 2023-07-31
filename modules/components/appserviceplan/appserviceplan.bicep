@@ -3,18 +3,23 @@
 @description('The Azure region into which the resources should be deployed.')
 param location string = resourceGroup().location
 
+@description('The business unit owning the resources.')
 @allowed([ 'set', 'setf', 'jmf', 'jmfe' ])
 param bu string
 
+@description('The deployment stage where the resources.')
 @allowed([ 'poc', 'dev', 'qa', 'uat', 'prd' ])
 param stage string
 
+@description('The role of the resource. Six (6) characters maximum')
 @maxLength(6)
 param role string
 
+@description('A unique identifier for an environment. Two (2) characters maximum')
 @maxLength(2)
 param appId string
 
+@description('The application name. Six (6) characters maximum')
 @maxLength(6)
 param appname string
 
@@ -50,7 +55,7 @@ param workspaceId string
 //*****************************************************************************************************
 
 
-// App Service Plan
+// App Service Plan Resource 
 //*****************************************************************************************************
 // resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = if (createNewAppServicePlan) {
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = if (newOrExistingAppServicePlan == 'new') {
@@ -74,7 +79,7 @@ output farmId string = ((appServicePlanExisting == 'new') ? appServicePlan.id : 
 //*****************************************************************************************************
 
 
-// Diagnostic Settings
+// Diagnostic Settings Resource
 //*****************************************************************************************************
 resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: 'diag-${appServicePlan.name}'
