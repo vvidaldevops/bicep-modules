@@ -133,7 +133,7 @@ module functionStorageAccountModule 'br/ACR-LAB:bicep/components/storage-account
 
 // Function App Module
 //*****************************************************************************************************
-module functionAppModule 'br/ACR-LAB:bicep/components/functionapp:v1.1.0' = {
+module functionAppModule 'br/ACR-LAB:bicep/components/functionapp:v1.0.0' = {
 //module functionAppModule '../../components/functionapp/functionapp.bicep' = {
   name: 'functionAppModule'
   params: {
