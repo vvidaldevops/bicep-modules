@@ -38,11 +38,11 @@ param appServicePlanKind string
 @description('The tier of the App Service plan.')
 param appServicePlanTier string
 
-// @description('The name from Service Endpoint Subnet.')
-// param appServiceEndpointVnetName string
+@description('The name from Service Endpoint Subnet.')
+param appServiceEndpointVnetName string
 
-// @description('The name from Service Endpoint Subnet.')
-// param appServiceEndpointSubnetName string
+@description('The name from Service Endpoint Subnet.')
+param appServiceEndpointSubnetName string
 //*****************************************************************************************************
 
 // App Service Parameters
@@ -63,8 +63,8 @@ param pvtEndpointSubnetId string
 
 // App Service Plan Module
 //*****************************************************************************************************
-// module appServicePlanModule 'br/ACR-LAB:bicep/components/appserviceplan:v1.0.0' = {
-module appServicePlanModule '../../components/appserviceplan/appserviceplan.bicep' = {
+module appServicePlanModule 'br/ACR-LAB:bicep/components/appserviceplan:v1.0.0' = {
+//module appServicePlanModule '../../components/appserviceplan/appserviceplan.bicep' = {
   name: 'appServicePlanModule'
   params: {
     location: location
@@ -87,8 +87,8 @@ module appServicePlanModule '../../components/appserviceplan/appserviceplan.bice
 
 // App Service Module
 //*****************************************************************************************************
-// module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1.0.0' = {
-module appServiceModule '../../components/appservice/appservice.bicep' = {
+module appServiceModule 'br/ACR-LAB:bicep/components/appservice:v1.0.0' = {
+//module appServiceModule '../../components/appservice/appservice.bicep' = {
   name: 'appServiceModule'
   params: {
     location: location
@@ -97,8 +97,8 @@ module appServiceModule '../../components/appservice/appservice.bicep' = {
     role: role
     appId: appId
     appname: appname
-    // appServiceEndpointVnetName: appServiceEndpointVnetName
-    // appServiceEndpointSubnetName: appServiceEndpointSubnetName
+    appServiceEndpointVnetName: appServiceEndpointVnetName
+    appServiceEndpointSubnetName: appServiceEndpointSubnetName
     farmId: createNewAppServicePlan ? appServicePlanModule.outputs.farmId : existingappServicePlanId
     workspaceId: workspaceId
     pvtEndpointSubnetId: pvtEndpointSubnetId

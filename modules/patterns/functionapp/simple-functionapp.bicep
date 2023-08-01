@@ -87,8 +87,8 @@ param funcStgServiceEndpointSubnetName string
 
 // App Service Plan Module
 //*****************************************************************************************************
-// module appServicePlanModule 'br/ACR-LAB:bicep/components/appserviceplan:v1.0.0' = {
-module appServicePlanModule '../../components/appserviceplan/appserviceplan.bicep' = {
+module appServicePlanModule 'br/ACR-LAB:bicep/components/appserviceplan:v1.0.0' = {
+//module appServicePlanModule '../../components/appserviceplan/appserviceplan.bicep' = {
   name: 'appServicePlanModule'
   params: {
     location: location
@@ -109,8 +109,8 @@ module appServicePlanModule '../../components/appserviceplan/appserviceplan.bice
 
 // Storage Account for Function App Module
 //*****************************************************************************************************
-// module functionStorageAccountModule 'br/ACR-LAB:bicep/components/storage-account:v1.0.0' = {
-module functionStorageAccountModule '../../components/storage-account/storage.bicep' = {
+module functionStorageAccountModule 'br/ACR-LAB:bicep/components/storage-account:v1.0.0' = {
+//module functionStorageAccountModule '../../components/storage-account/storage.bicep' = {
   name: 'funcStorageAccountModule'
   params: {
     location: location
@@ -133,8 +133,8 @@ module functionStorageAccountModule '../../components/storage-account/storage.bi
 
 // Function App Module
 //*****************************************************************************************************
-// module functionAppModule 'br/ACR-LAB:bicep/components/functionapp:v1.1.0' = {
-  module functionAppModule '../../components/functionapp/functionapp.bicep' = {
+module functionAppModule 'br/ACR-LAB:bicep/components/functionapp:v1.1.0' = {
+//module functionAppModule '../../components/functionapp/functionapp.bicep' = {
   name: 'functionAppModule'
   params: {
     location: location
