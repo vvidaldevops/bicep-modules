@@ -59,7 +59,6 @@ jobs:
     - name: Publish Modules to ACR
       run: |
           # Loop through App Service components directory
-          cd modules
           for d in components
           do
             cd modules/$d
