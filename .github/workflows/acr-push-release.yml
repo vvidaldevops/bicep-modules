@@ -24,6 +24,7 @@ jobs:
     - name: Compare Modules in ACR
       run: |
           # Loop through App Service components directory
+          cd modules
           for d in components
           do
             cd $d
@@ -45,6 +46,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    # Checkout code
+    - name: Checkout
+      uses: actions/checkout@main
+
     # Log into Azure
     - name: Az CLI login
       uses: azure/login@v1
@@ -55,6 +60,7 @@ jobs:
     - name: Publish Modules to ACR
       run: |
           # Loop through App Service components directory
+          cd modules
           for d in components
           do
             cd $d
