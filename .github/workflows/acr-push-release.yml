@@ -20,12 +20,25 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: Loop to Folder Names
+      run: |
+        folder_array=()
+        for f in modules/components/*/; do
+
+            folder_name=$(basename "$f")
+            folder_array+=("$folder_name")
+        done
+
+        for folder in "${folder_array[@]}"; do
+            echo "$folder"
+        done
+
     # Compare and prepare to push modules to ACR
     - name: Compare Modules in ACR
       run: |
           # Loop through components directory
           cd modules
-          for d in components/ ; do
+          for d in "${folder_array[@]}" ; do
             cd $d
             version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
             if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
