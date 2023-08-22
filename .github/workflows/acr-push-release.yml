@@ -1,4 +1,4 @@
-name: Automatic Releases workflow sample
+name: Deploy Modules in ACR and create Release
 on:  
   pull_request:
     branches:
@@ -15,9 +15,6 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-        # client-id: ${{ secrets.CLIENT_ID }}
-        # tenant-id: ${{ secrets.TENANT_ID }}
-        # subscription-id: ${{ secrets.SUBSCRIPTION_ID }} 
 
     # Compare and prepare to push modules to ACR
     - name: Compare Modules in ACR
@@ -49,9 +46,6 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-        # client-id: ${{ secrets.CLIENT_ID }}
-        # tenant-id: ${{ secrets.TENANT_ID }}
-        # subscription-id: ${{ secrets.SUBSCRIPTION_ID }} 
 
     # Push modules to ACR
     - name: Publish Modules to ACR
