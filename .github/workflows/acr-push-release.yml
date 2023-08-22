@@ -1,0 +1,132 @@
+name: Automatic Releases workflow sample
+on:  
+  pull_request:
+    branches:
+      - main
+  
+jobs:
+  compare-modules:
+    name: "Compare modules in ACR"
+    runs-on: ubuntu-latest
+    steps:
+
+    # Log into Azure
+    - name: Az CLI login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        # client-id: ${{ secrets.CLIENT_ID }}
+        # tenant-id: ${{ secrets.TENANT_ID }}
+        # subscription-id: ${{ secrets.SUBSCRIPTION_ID }} 
+
+    # Compare and prepare to push modules to ACR
+    - name: Compare Modules in ACR
+      run: |
+          # Loop through App Service components directory
+          for d in components
+          do
+            cd $d
+            version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
+            then 
+              echo "This module will be updated - br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
+            else 
+              echo "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version as it already exists";
+            fi
+            cd - > /dev/null
+          done
+  
+  publish-modules:
+    name: "Publish modules to ACR"
+    needs: compare-modules
+    environment:
+      name: stg
+    runs-on: ubuntu-latest
+    steps:
+
+    # Log into Azure
+    - name: Az CLI login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        # client-id: ${{ secrets.CLIENT_ID }}
+        # tenant-id: ${{ secrets.TENANT_ID }}
+        # subscription-id: ${{ secrets.SUBSCRIPTION_ID }} 
+
+    # Push modules to ACR
+    - name: Publish Modules to ACR
+      run: |
+          # Loop through App Service components directory
+          for d in components
+          do
+            cd $d
+            version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
+            then 
+              echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
+              az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
+            else 
+              echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version as it already exists";
+            fi
+            cd - > /dev/null
+          done
+
+  create-release:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    name: "Create release"
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    needs: publish-modules
+    outputs:
+      tag: ${{ steps.changelog.outputs.tag }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
+    steps:  
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Conventional Changelog Action
+        id: changelog 
+        uses: TriPSs/conventional-changelog-action@v3 
+        with: 
+          github-token: ${{ secrets.github_token }}
+          output-file: 'false' 
+          skip-commit: 'true'
+          skip-tag: 'false'
+      - name: Create Release
+        uses: actions/create-release@v1
+        if: ${{ steps.changelog.outputs.skipped == 'false' && github.ref == 'refs/heads/main'}} 
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with: 
+          tag_name: ${{ steps.changelog.outputs.tag }} 
+          release_name: ${{ steps.changelog.outputs.tag }} 
+          body: ${{ steps.changelog.outputs.clean_changelog }}
+
+  create-comment:
+    runs-on: ubuntu-latest
+    needs: [publish-modules,create-release]
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: read
+    steps:  
+      - uses: actions/checkout@v3
+      - name: 'Create issue'
+        id: create-issue
+        uses: JasonEtco/create-an-issue@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.create-release.outputs.tag }} 
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ steps.create-issue.outputs.number }} 
+          body: |
+            New container created and published!
+            ## New tag: ${{ needs.create-release.outputs.tag }}
+            ${{ needs.create-release.outputs.changelog }} 
+          reactions: rocket
+
+        
+ 
+     
