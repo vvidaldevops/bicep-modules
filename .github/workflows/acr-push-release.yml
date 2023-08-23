@@ -41,8 +41,6 @@ jobs:
             then 
                 echo "*NEW VERSION* ---> $d - $semantic_version. It will be deployed in next task.";
                 echo "*The major version $major_version will also be updated to the semantic version above.*";
-            else 
-                echo "$d is up to date.";
             fi
 
             cd - > /dev/null
@@ -89,7 +87,7 @@ jobs:
                 echo "Pushing new image: $d $semantic_version";
                 az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$semantic_version";
                 echo "Updating major image: $major_version";
-                az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$major_version";
+                az bicep publish --file $d.bicep --target --force "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$major_version";
             fi
 
             cd - > /dev/null
