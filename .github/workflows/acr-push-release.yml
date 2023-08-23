@@ -33,15 +33,18 @@ jobs:
         echo "***************************************"
 
         for d in "${folders[@]}" ; do
+
             cd modules/components/$d
-            echo "Analysing $d versions..."
-            version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
-            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
+            major_version="v$(cat metadata.json | jq -r '.version.major')"
+            semantic_version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$semantic_version 2>/dev/null)" ]; 
             then 
-                echo "*NEW VERSION* ---> $d - $version. It will be deployed in next task.";
+                echo "*NEW VERSION* ---> $d - $semantic_version. It will be deployed in next task.";
+                echo "*The major version $major_version will also be updated to the semantic version above.*";
             else 
                 echo "$d is up to date.";
             fi
+
             cd - > /dev/null
         done
 
@@ -76,13 +79,19 @@ jobs:
         echo "***************************************"
 
         for d in "${folders[@]}" ; do
+
             cd modules/components/$d
-            version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
-            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
+
+            major_version="v$(cat metadata.json | jq -r '.version.major')"
+            semantic_version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$semantic_version 2>/dev/null)" ]; 
             then 
-                echo "Deploying: $d $version";
-                az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
+                echo "Pushing new image: $d $semantic_version";
+                az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$semantic_version";
+                echo "Updating major image: $major_version";
+                az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$major_version";
             fi
+
             cd - > /dev/null
         done
 
