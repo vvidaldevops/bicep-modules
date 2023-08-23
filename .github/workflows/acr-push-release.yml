@@ -49,7 +49,7 @@ jobs:
           else 
             echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version as it already exists";
           fi
-          cd - > /dev/null
+          cd ..
         done
 
   
