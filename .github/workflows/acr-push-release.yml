@@ -21,7 +21,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     # Compare Bicep Components Modules
-    - name: Publish Modules to ACR
+    - name: Comparing modules versions
       run: |
         folders=()
         for f in modules/components/*/; do
@@ -42,7 +42,6 @@ jobs:
             echo "Skipping $d $version as it already exists";
             fi
             cd - > /dev/null
-            echo "***************************************"
         done
 
   # Publish modules to ACR
