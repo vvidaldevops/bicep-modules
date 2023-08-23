@@ -33,32 +33,23 @@ jobs:
             echo "$folder"
         done
 
-    # Compare and prepare to push modules to ACR
-    - name: Compare Modules in ACR
+      # Publish Bicep Components Modules
+    - name: Publish Modules to ACR
       run: |
-        # Loop through components directory
-        cd modules
         for d in "${folder_array[@]}"
         do
           cd $d
-          echo "Testing directory"
-          pwd
-          VERSION="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
-          echo "Version in Metadata file: $VERSION"
-          TAGS=$(az acr repository show-manifests --name ${{ secrets.ACR_SERVER }} --repository bicep/components/$d --query "[].tags" --output tsv)
-          for TAG in $TAGS; do
-            if ["$TAG" = "$VERSION"]; then 
-              echo "Found a matching tag: $TAG. Skipping deploy"
-              FOUND_TAG=true
-              break
-            fi
-
-            if [ "$FOUND_TAG" = false ]; then
-              echo "Version not found. Next step will deploy a new image to ACR..."
-            fi
-          done
-          cd ..
+          version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
+          if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
+          then 
+            echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
+            az bicep publish --file appservice.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
+          else 
+            echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version as it already exists";
+          fi
+          cd - > /dev/null
         done
+
   
   publish-modules:
     name: "Publish modules to ACR"
