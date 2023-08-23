@@ -32,6 +32,10 @@ jobs:
 
         echo "***************************************"
 
+        echo "Analyzing the modules to identify changes..."
+
+        echo ""
+
         for d in "${folders[@]}" ; do
 
             cd modules/components/$d
