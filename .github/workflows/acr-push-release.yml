@@ -38,7 +38,7 @@ jobs:
             version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
             if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
             then 
-                echo "*NEW VERSION* ---> $d - $version. It will be deployed in next step.";
+                echo "*NEW VERSION* ---> $d - $version. It will be deployed in next task.";
             else 
                 echo "$d is up to date.";
             fi
@@ -82,7 +82,6 @@ jobs:
             then 
                 echo "Deploying: $d $version";
                 az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
-            else 
             fi
             cd - > /dev/null
         done
