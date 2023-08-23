@@ -20,24 +20,22 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    # - name: Loop to Folder Names
-    #   run: |
-    #     folder_array=()
-    #     for f in modules/components/*/; do
+    - name: Loop to Folder Names
+      run: |
+        folders=()
+        for f in modules/components/*/; do
 
-    #         folder_name=$(basename "$f")
-    #         folder_array+=("$folder_name")
-    #     done
+            folder_name=$(basename "$f")
+            folders+=("$folder_name")
+        done
 
-    #     for folder in "${folder_array[@]}"; do
-    #         echo "$folder"
-    #     done
-    
+        for folder in "${folders[@]}"; do
+            echo "$folder"
+        done
 
       # Publish Bicep Components Modules
     - name: Publish Modules to ACR
       run: |
-        folders=("appservice" "appserviceplan" "functionapp")
         for d in "${folders[@]}" ; do
           cd modules/components/$d
           echo "Entering component folder"
@@ -45,8 +43,7 @@ jobs:
           version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
           if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
           then 
-            echo "Publishing br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
-            az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
+            echo "The next step will deploy this version: $d:$version";
           else 
             echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version as it already exists";
           fi
@@ -55,7 +52,6 @@ jobs:
           pwd
         done
 
-  
   publish-modules:
     name: "Publish modules to ACR"
     needs: compare-modules
@@ -75,43 +71,36 @@ jobs:
     #Loop to get modules folder names
     - name: Loop to Folder Names
       run: |
-        folder_array=()
-        for f in modules/components/*/; do
-            folder_name=$(basename "$f")
-            folder_array+=("$folder_name")
-        done
-
-        for folder in "${folder_array[@]}"; do
-            echo "$folder"
-        done
-
-    # Push modules to ACR
+          folders=()
+          for f in modules/components/*/; do
+  
+              folder_name=$(basename "$f")
+              folders+=("$folder_name")
+          done
+  
+          for folder in "${folders[@]}"; do
+              echo "$folder"
+          done
+  
+        # Publish Bicep Components Modules
     - name: Publish Modules to ACR
       run: |
-        # Loop through components directory
-        cd modules
-        for d in "${folder_array[@]}"
-        do
-          cd $d
-          echo "Testing directory"
-          pwd
-          VERSION="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
-          echo "Version in Metadata file: $VERSION"
-          TAGS=$(az acr repository show-manifests --name ${{ secrets.ACR_SERVER }} --repository bicep/components/$d --query "[].tags" --output tsv)
-            for TAG in $TAGS; do
-                if ["$TAG" = "$VERSION"]; then 
-                    echo "Found a matching tag: $TAG. Skipping deploy"
-                    FOUND_TAG=true
-                    break
-                fi
-
-                if [ "$FOUND_TAG" = false ]; then
-                    echo "Version not found. Deploying new version of $d : $VERSION."
-                    az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
-                fi     
-            done
-          cd ..
-        done
+          for d in "${folders[@]}" ; do
+            cd modules/components/$d
+            echo "Entering component folder"
+            pwd
+            version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
+            then 
+              echo "Deploying: $d:$version";
+              az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
+            else 
+              echo "Skipping $d:$version as it already exists";
+            fi
+            cd - > /dev/null
+            echo "Exit the folder"
+            pwd
+          done
 
   create-release:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
