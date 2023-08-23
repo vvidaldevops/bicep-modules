@@ -38,7 +38,7 @@ jobs:
     - name: Publish Modules to ACR
       run: |
         folders=("appservice" "appserviceplan" "functionapp")
-        for d in "modules/components/${folders[@]}" ; do
+        for d in "${folders[@]}" ; do
           cd modules/components/$d
           echo "Entering component folder"
           pwd
