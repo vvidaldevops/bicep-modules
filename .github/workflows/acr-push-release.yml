@@ -10,10 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    # Checkout code
-    - name: Checkout
-      uses: actions/checkout@main
-
     # Log into Azure
     - name: Az CLI login
       uses: azure/login@v1
@@ -64,10 +60,6 @@ jobs:
       name: stg
     runs-on: ubuntu-latest
     steps:
-
-    # Checkout code
-    - name: Checkout
-      uses: actions/checkout@main
 
     # Log into Azure
     - name: Az CLI login
