@@ -37,7 +37,7 @@ jobs:
       # Publish Bicep Components Modules
     - name: Publish Modules to ACR
       run: |
-        folders=("appservice" "storageaccount")
+        folders=("appservice" "appserviceplan" "functionapp")
         for d in "modules/components/${folders[@]}"
         do
           cd $d
