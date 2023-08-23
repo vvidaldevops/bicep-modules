@@ -30,19 +30,22 @@ jobs:
             folders+=("$folder_name")
         done
 
+        echo "***************************************"
+
         for d in "${folders[@]}" ; do
             cd modules/components/$d
-            echo "***************************************"
             echo "Analysing $d versions..."
             version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
             if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
             then 
-            echo "The next step will deploy this version: $version";
+                echo "*NEW VERSION* ---> $d - $version. It will be deployed in next step.";
             else 
-            echo "Skipping $d $version as it already exists";
+                echo "$d is up to date.";
             fi
             cd - > /dev/null
         done
+
+        echo "***************************************"
 
   # Publish modules to ACR
   publish-modules:
@@ -69,20 +72,22 @@ jobs:
             folder_name=$(basename "$f")
             folders+=("$folder_name")
         done
-        
-        for d in "${folders[@]}" ; do
-        cd modules/components/$d
+
         echo "***************************************"
-        version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
-        if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
-        then 
-            echo "Deploying: $d $version";
-            az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
-        else 
-            echo "Skipping $d version $version as it already exists";
-        fi
-        cd - > /dev/null
+
+        for d in "${folders[@]}" ; do
+            cd modules/components/$d
+            version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
+            then 
+                echo "Deploying: $d $version";
+                az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
+            else 
+            fi
+            cd - > /dev/null
         done
+
+        echo "***************************************"
 
   # Create release
   create-release:
