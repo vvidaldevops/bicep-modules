@@ -20,36 +20,32 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Loop to Folder Names
-      run: |
-
-
-      # Publish Bicep Components Modules
+    # Compare Bicep Components Modules
     - name: Publish Modules to ACR
       run: |
         folders=()
         for f in modules/components/*/; do
 
-          folder_name=$(basename "$f")
-          folders+=("$folder_name")
+            folder_name=$(basename "$f")
+            folders+=("$folder_name")
         done
 
         for d in "${folders[@]}" ; do
-          cd modules/components/$d
-          echo "Entering component folder"
-          pwd
-          version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
-          if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
-          then 
+            cd modules/components/$d
+            echo "***************************************"
+            echo "Analysing $d versions"
+            version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
+            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
+            then 
             echo "The next step will deploy this version: $d:$version";
-          else 
-            echo "Skipping $d:$version as it already exists";
-          fi
-          cd - > /dev/null
-          echo "Exit the folder"
-          pwd
+            else 
+            echo "Skipping $d $version as it already exists";
+            fi
+            cd - > /dev/null
+            echo "***************************************"
         done
 
+  # Publish modules to ACR
   publish-modules:
     name: "Publish modules to ACR"
     needs: compare-modules
@@ -66,40 +62,30 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    #Loop to get modules folder names
-    - name: Loop to Folder Names
-      run: |
-          folders=()
-          for f in modules/components/*/; do
-  
-              folder_name=$(basename "$f")
-              folders+=("$folder_name")
-          done
-  
-          for folder in "${folders[@]}"; do
-              echo "$folder"
-          done
-  
-        # Publish Bicep Components Modules
+    # Publish Bicep Components Modules
     - name: Publish Modules to ACR
       run: |
-          for d in "${folders[@]}" ; do
-            cd modules/components/$d
-            echo "Entering component folder"
-            pwd
-            version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
-            if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
-            then 
-              echo "Deploying: $d:$version";
-              az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
-            else 
-              echo "Skipping $d:$version as it already exists";
-            fi
-            cd - > /dev/null
-            echo "Exit the folder"
-            pwd
-          done
+        folders=()
+        for f in modules/components/*/; do
+        folder_name=$(basename "$f")
+        folders+=("$folder_name")
+        done
+        for d in "${folders[@]}" ; do
+        cd modules/components/$d
+        echo "***************************************"
+        version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
+        if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
+        then 
+            echo "Deploying: $d $version";
+            az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
+        else 
+            echo "Skipping $d version $version as it already exists";
+        fi
+        cd - > /dev/null
+        echo "***************************************"
+        done
 
+  # Create release
   create-release:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     name: "Create release"
