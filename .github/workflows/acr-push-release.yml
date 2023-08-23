@@ -22,21 +22,23 @@ jobs:
 
     - name: Loop to Folder Names
       run: |
-        folders=()
-        for f in modules/components/*/; do
 
-            folder_name=$(basename "$f")
-            folders+=("$folder_name")
-        done
-
-        for folder in "${folders[@]}"; do
-            echo "$folder"
-        done
 
       # Publish Bicep Components Modules
     - name: Publish Modules to ACR
       run: |
-        for d in "${folders[@]}" ; do
+        folders=()
+        for f in modules/components/*/; do
+
+          folder_name=$(basename "$f")
+          folders+=("$folder_name")
+        done
+
+        for folder in "${folders[@]}"; do
+          echo "$folder"
+        done
+        
+        for d in "${folders}" ; do
           cd modules/components/$d
           echo "Entering component folder"
           pwd
@@ -45,7 +47,7 @@ jobs:
           then 
             echo "The next step will deploy this version: $d:$version";
           else 
-            echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version as it already exists";
+            echo "Skipping $d:$version as it already exists";
           fi
           cd - > /dev/null
           echo "Exit the folder"
