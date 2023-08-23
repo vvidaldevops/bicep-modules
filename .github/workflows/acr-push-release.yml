@@ -41,6 +41,7 @@ jobs:
           for d in "${folder_array[@]}" ; do
             cd $d
             VERSION="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
+            echo "Version in Metadata file: $VERSION"
             TAGS=$(az acr repository show-manifests --name ${{ secrets.ACR_SERVER }} --repository bicep/components/$d --query "[].tags" --output tsv)
             for TAG in $TAGS; do
                 if ["$TAG" = "$VERSION"]; then 
@@ -96,6 +97,7 @@ jobs:
         for d in "${folder_array[@]}" ; do
         cd $d
         VERSION="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
+        echo "Version in Metadata file: $VERSION"
         TAGS=$(az acr repository show-manifests --name ${{ secrets.ACR_SERVER }} --repository bicep/components/$d --query "[].tags" --output tsv)
         for TAG in $TAGS; do
             if ["$TAG" = "$VERSION"]; then 
