@@ -43,25 +43,23 @@ jobs:
             VERSION="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
             echo "Version in Metadata file: $VERSION"
             TAGS=$(az acr repository show-manifests --name ${{ secrets.ACR_SERVER }} --repository bicep/components/$d --query "[].tags" --output tsv)
-            for TAG in $TAGS; do
-                if ["$TAG" = "$VERSION"]; then 
-                    echo "Found a matching tag: $TAG. Skipping deploy"
-                    FOUND_TAG=true
-                    break
-                fi
-            done
+                for TAG in $TAGS; do
+                    if ["$TAG" = "$VERSION"]; then 
+                        echo "Found a matching tag: $TAG. Skipping deploy"
+                        FOUND_TAG=true
+                        break
+                    fi
 
-            if [ "$FOUND_TAG" = false ]; then
-                echo "Version not found. Next step will deploy a new image to ACR..."
-            fi
+                    if [ "$FOUND_TAG" = false ]; then
+                        echo "Version not found. Next step will deploy a new image to ACR..."
+                    fi
+                done
             cd ..
           done
   
   publish-modules:
     name: "Publish modules to ACR"
     needs: compare-modules
-    environment:
-      name: stg
     runs-on: ubuntu-latest
     steps:
     
@@ -99,18 +97,18 @@ jobs:
         VERSION="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
         echo "Version in Metadata file: $VERSION"
         TAGS=$(az acr repository show-manifests --name ${{ secrets.ACR_SERVER }} --repository bicep/components/$d --query "[].tags" --output tsv)
-        for TAG in $TAGS; do
-            if ["$TAG" = "$VERSION"]; then 
-                echo "Found a matching tag: $TAG. Skipping deploy"
-                FOUND_TAG=true
-                break
-            fi
-        done
+            for TAG in $TAGS; do
+                if ["$TAG" = "$VERSION"]; then 
+                    echo "Found a matching tag: $TAG. Skipping deploy"
+                    FOUND_TAG=true
+                    break
+                fi
 
-        if [ "$FOUND_TAG" = false ]; then
-            echo "Version not found. Next step will deploy a new image to ACR..."
-            az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
-        fi
+                if [ "$FOUND_TAG" = false ]; then
+                    echo "Version not found. Deploying new version of $d : $VERSION."
+                    az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
+                fi     
+            done
         cd ..
         done
 
