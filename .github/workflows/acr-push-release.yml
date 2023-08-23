@@ -41,6 +41,8 @@ jobs:
         for d in "modules/components/${folders[@]}"
         do
           cd $d
+          echo "Entering component folder"
+          pwd
           version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
           if [ -z "$(az acr repository show -n ${{ secrets.ACR_SERVER }} --image bicep/components/$d:$version 2>/dev/null)" ]; 
           then 
@@ -49,7 +51,9 @@ jobs:
           else 
             echo "Skipping br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version as it already exists";
           fi
-          cd ..
+          cd - > /dev/null
+          echo "Exit the folder"
+          pwd
         done
 
   
