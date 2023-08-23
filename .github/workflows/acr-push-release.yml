@@ -34,11 +34,7 @@ jobs:
           folders+=("$folder_name")
         done
 
-        for folder in "${folders[@]}"; do
-          echo "$folder"
-        done
-        
-        for d in "${folders}" ; do
+        for d in "${folders[@]}" ; do
           cd modules/components/$d
           echo "Entering component folder"
           pwd
