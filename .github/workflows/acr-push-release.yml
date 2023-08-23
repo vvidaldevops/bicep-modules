@@ -36,26 +36,29 @@ jobs:
     # Compare and prepare to push modules to ACR
     - name: Compare Modules in ACR
       run: |
-          # Loop through components directory
-          cd modules
-          for d in "${folder_array[@]}" ; do
-            cd $d
-            VERSION="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
-            echo "Version in Metadata file: $VERSION"
-            TAGS=$(az acr repository show-manifests --name ${{ secrets.ACR_SERVER }} --repository bicep/components/$d --query "[].tags" --output tsv)
-                for TAG in $TAGS; do
-                    if ["$TAG" = "$VERSION"]; then 
-                        echo "Found a matching tag: $TAG. Skipping deploy"
-                        FOUND_TAG=true
-                        break
-                    fi
+        # Loop through components directory
+        cd modules
+        for d in "${folder_array[@]}"
+        do
+          cd $d
+          echo "Testing directory"
+          pwd
+          VERSION="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
+          echo "Version in Metadata file: $VERSION"
+          TAGS=$(az acr repository show-manifests --name ${{ secrets.ACR_SERVER }} --repository bicep/components/$d --query "[].tags" --output tsv)
+          for TAG in $TAGS; do
+            if ["$TAG" = "$VERSION"]; then 
+              echo "Found a matching tag: $TAG. Skipping deploy"
+              FOUND_TAG=true
+              break
+            fi
 
-                    if [ "$FOUND_TAG" = false ]; then
-                        echo "Version not found. Next step will deploy a new image to ACR..."
-                    fi
-                done
-            cd ..
+            if [ "$FOUND_TAG" = false ]; then
+              echo "Version not found. Next step will deploy a new image to ACR..."
+            fi
           done
+          cd ..
+        done
   
   publish-modules:
     name: "Publish modules to ACR"
@@ -78,7 +81,6 @@ jobs:
       run: |
         folder_array=()
         for f in modules/components/*/; do
-
             folder_name=$(basename "$f")
             folder_array+=("$folder_name")
         done
@@ -92,11 +94,14 @@ jobs:
       run: |
         # Loop through components directory
         cd modules
-        for d in "${folder_array[@]}" ; do
-        cd $d
-        VERSION="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
-        echo "Version in Metadata file: $VERSION"
-        TAGS=$(az acr repository show-manifests --name ${{ secrets.ACR_SERVER }} --repository bicep/components/$d --query "[].tags" --output tsv)
+        for d in "${folder_array[@]}"
+        do
+          cd $d
+          echo "Testing directory"
+          pwd
+          VERSION="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
+          echo "Version in Metadata file: $VERSION"
+          TAGS=$(az acr repository show-manifests --name ${{ secrets.ACR_SERVER }} --repository bicep/components/$d --query "[].tags" --output tsv)
             for TAG in $TAGS; do
                 if ["$TAG" = "$VERSION"]; then 
                     echo "Found a matching tag: $TAG. Skipping deploy"
@@ -109,7 +114,7 @@ jobs:
                     az bicep publish --file $d.bicep --target "br:${{ secrets.ACR_SERVER }}/bicep/components/$d:$version";
                 fi     
             done
-        cd ..
+          cd ..
         done
 
   create-release:
