@@ -38,7 +38,7 @@ jobs:
     - name: Publish Modules to ACR
       run: |
         folders=("appservice" "storageaccount")
-        for d in "${folders[@]}"
+        for d in "modules/components/${folders[@]}"
         do
           cd $d
           version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
