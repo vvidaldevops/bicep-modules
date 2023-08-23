@@ -20,23 +20,25 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Loop to Folder Names
-      run: |
-        folder_array=()
-        for f in modules/components/*/; do
+    # - name: Loop to Folder Names
+    #   run: |
+    #     folder_array=()
+    #     for f in modules/components/*/; do
 
-            folder_name=$(basename "$f")
-            folder_array+=("$folder_name")
-        done
+    #         folder_name=$(basename "$f")
+    #         folder_array+=("$folder_name")
+    #     done
 
-        for folder in "${folder_array[@]}"; do
-            echo "$folder"
-        done
+    #     for folder in "${folder_array[@]}"; do
+    #         echo "$folder"
+    #     done
+    
 
       # Publish Bicep Components Modules
     - name: Publish Modules to ACR
       run: |
-        for d in "${folder_array[@]}"
+        folders=("appservice" "storageaccount")
+        for d in "${folders[@]}"
         do
           cd $d
           version="v$(cat metadata.json | jq -r '.version.major').$(cat metadata.json | jq -r '.version.minor').$(cat metadata.json | jq -r '.version.patch')"
