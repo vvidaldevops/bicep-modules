@@ -51,7 +51,7 @@ jobs:
             cd - > /dev/null
         done
 
-        if [ ${components_list[@]} -eq 0 ]; then
+        if [ ${#components_list[@]} -eq 0 ]; then
             echo "Nothing to change in ACR Images Library =)"
             echo "***************************************"
             exit 1
