@@ -1,6 +1,6 @@
 name: Deploy Modules in ACR and create Release
 on:  
-  pull_request:
+  push:
     branches:
       - main
   
