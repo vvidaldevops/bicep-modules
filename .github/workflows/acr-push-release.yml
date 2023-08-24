@@ -52,9 +52,10 @@ jobs:
         done
 
         if [ ${#components_list[@]} -eq 0 ]; then
-            echo "Nothing to change in ACR Images Library =)"
+            echo "No changes were identified in the analysis. =)"
+            echo "If you are working in a image change, remember to modify the version in the metadata file."
             echo "***************************************"
-            exit 78
+            exit 1
         fi
 
         echo "***************************************"
