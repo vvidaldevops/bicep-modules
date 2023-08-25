@@ -90,7 +90,7 @@ resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-previe
         category: 'AllMetrics'
         enabled: true
         retentionPolicy: {
-          days: 90
+          days: 180
           enabled: true 
         }
       }
