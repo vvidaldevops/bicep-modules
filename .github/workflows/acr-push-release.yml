@@ -133,33 +133,4 @@ jobs:
         with: 
           tag_name: ${{ steps.changelog.outputs.tag }} 
           release_name: ${{ steps.changelog.outputs.tag }} 
-          body: ${{ steps.changelog.outputs.clean_changelog }}
-
-#   create-comment:
-#     runs-on: ubuntu-latest
-#     needs: [publish-modules,create-release]
-#     permissions:
-#       issues: write
-#       pull-requests: write
-#       contents: read
-#     steps:  
-#       - uses: actions/checkout@v3
-#       - name: 'Create issue'
-#         id: create-issue
-#         uses: JasonEtco/create-an-issue@v2
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#           VERSION: ${{ needs.create-release.outputs.tag }} 
-#       - name: Create comment
-#         uses: peter-evans/create-or-update-comment@v3
-#         with:
-#           issue-number: ${{ steps.create-issue.outputs.number }} 
-#           body: |
-#             New container created and published!
-#             ## New tag: ${{ needs.create-release.outputs.tag }}
-#             ${{ needs.create-release.outputs.changelog }} 
-#           reactions: rocket
-
-        
- 
-     
+          body: ${{ steps.changelog.outputs.clean_changelog }}     
