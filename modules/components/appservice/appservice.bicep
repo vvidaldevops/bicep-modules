@@ -135,7 +135,7 @@ resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-previe
         category: 'AppServiceHTTPLogs'
         enabled: true
         retentionPolicy: {
-          days: 30
+          days: 60
           enabled: true 
           }
         }
