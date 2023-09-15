@@ -24,6 +24,7 @@ param tags object
    'jmfe' 
 ])
 param businessUnit string
+//*****************************************************************************************************
 
 
 // Required Parameters - Azure Cache for Redis
@@ -186,19 +187,19 @@ resource cacheForRedis 'Microsoft.Cache/redis@2022-06-01' = {
 //*****************************************************************************************************************
 
 
-// Diagnostic Settings Resource
-//*****************************************************************************************************************
-resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = if (!empty(workspaceId)) {
-  name: 'diag-${cacheForRedis.name}'
-  scope: cacheForRedis
-  properties: {
-    workspaceId: workspaceId
-    logs: [
-      {
-        category: 'AppServiceHTTPLogs'
-        enabled: true
-      }
-    ]
-  }
-}
-//*****************************************************************************************************************
+// // Diagnostic Settings Resource
+// //*****************************************************************************************************************
+// resource diagnosticLogs 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = if (!empty(workspaceId)) {
+//   name: 'diag-${cacheForRedis.name}'
+//   scope: cacheForRedis
+//   properties: {
+//     workspaceId: workspaceId
+//     logs: [
+//       {
+//         category: 'AppServiceHTTPLogs'
+//         enabled: true
+//       }
+//     ]
+//   }
+// }
+// //*****************************************************************************************************************
