@@ -137,8 +137,8 @@ var redisMintlsversion = '1.2'
 
 // Redis Cache Optional Parameters
 //*****************************************************************************************************************
-@description('(Require) The ID of Log Analytics Workspace.')
-param workspaceId string = ''
+// @description('(Require) The ID of Log Analytics Workspace.')
+// param workspaceId string = ''
 //*****************************************************************************************************************
 
 // Redis Cache Resource
