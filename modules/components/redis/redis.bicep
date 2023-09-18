@@ -133,6 +133,11 @@ param redisRddstorageconnectionstring string = ''
 
 // Predefined Cache for Redis Variables
 var redisMintlsversion = '1.2'
+
+@description('Redis version that is available. Supported versions: 4.0, 6.0 (latest). Default value is (latest).')
+var redisVersion = '6.0'
+
+param maxmemoryreserved string
 //*****************************************************************************************************************
 
 // Redis Cache Optional Parameters
@@ -161,14 +166,14 @@ resource cacheForRedis 'Microsoft.Cache/redis@2022-06-01' = {
       'maxfragmentationmemory-reserved': 'string'
       'maxmemory-delta': 'string'
       'maxmemory-policy': 'string'
-      'maxmemory-reserved': 'string'
+      'maxmemory-reserved': maxmemoryreserved
       'preferred-data-persistence-auth-method': 'SAS'
       'rdb-backup-enabled': 'disabled'
       'rdb-backup-frequency': redisRdbBackupFrequency
       // 'rdb-backup-max-snapshot-count': 'string'
       'rdb-storage-connection-string': redisRddstorageconnectionstring
     }
-    redisVersion: ''
+    redisVersion: redisVersion
     replicasPerMaster: redisReplicasPerMaster
     replicasPerPrimary: redisReplicasPerPrimary
     shardCount: redisShardCount
