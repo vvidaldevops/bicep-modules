@@ -137,6 +137,7 @@ var redisMintlsversion = '1.2'
 @description('Redis version that is available. Supported versions: 4.0, 6.0 (latest). Default value is (latest).')
 var redisVersion = '6.0'
 
+@description('Value in megabytes reserved for non-cache usage per shard e.g. failover. PSRule recomendation: Value in megabytes reserved for non-cache usage per shard e.g. failover. ')
 param maxmemoryreserved string
 //*****************************************************************************************************************
 
